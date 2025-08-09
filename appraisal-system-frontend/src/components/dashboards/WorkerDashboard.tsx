@@ -124,15 +124,16 @@ export default function WorkerDashboard() {
   };
 
   const handleSaveSection = (sectionId: string) => {
-    setAppraisalData(prev => ({
-      ...prev,
-      [sectionId]: { ...prev[sectionId as keyof typeof prev], completed: true }
-    }));
+    const updatedData = {
+      ...appraisalData,
+      [sectionId]: { ...appraisalData[sectionId as keyof typeof appraisalData], completed: true }
+    };
+    setAppraisalData(updatedData);
     setCurrentSection(null);
     
-    // Check if all sections are completed
+    // Check if all sections are completed using the updated data
     const allCompleted = appraisalSections.every(section => 
-      appraisalData[section.id as keyof typeof appraisalData]?.completed
+      updatedData[section.id as keyof typeof updatedData]?.completed
     );
     if (allCompleted) {
       setAppraisalStatus('Ready to Submit');

@@ -24,10 +24,10 @@ export default function DashboardPage() {
   // Show loading while redirecting
   if (!isLoggedIn) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-white dark:bg-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Redirecting...</h1>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white mx-auto mb-4"></div>
+          <h1 className="text-xl font-semibold text-black dark:text-white">Redirecting...</h1>
         </div>
       </div>
     );

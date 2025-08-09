@@ -225,6 +225,26 @@ export default function ManagerDashboard() {
   };
 
   const handleAddMember = () => {
+    // Validation
+    if (!newMember.name.trim()) {
+      alert('Please enter a name');
+      return;
+    }
+    if (!newMember.email.trim()) {
+      alert('Please enter an email');
+      return;
+    }
+    if (!newMember.position.trim()) {
+      alert('Please enter a position');
+      return;
+    }
+    
+    // Check for duplicate email
+    if (teamMembers.some(member => member.email.toLowerCase() === newMember.email.toLowerCase())) {
+      alert('A team member with this email already exists');
+      return;
+    }
+
     const nextId = Math.max(...teamMembers.map(m => m.id)) + 1;
     const memberToAdd: TeamMember = {
       ...newMember,
@@ -246,11 +266,36 @@ export default function ManagerDashboard() {
 
   const handleUpdateMember = () => {
     if (!selectedMember) return;
+    
+    // Validation
+    if (!newMember.name.trim()) {
+      alert('Please enter a name');
+      return;
+    }
+    if (!newMember.email.trim()) {
+      alert('Please enter an email');
+      return;
+    }
+    if (!newMember.position.trim()) {
+      alert('Please enter a position');
+      return;
+    }
+    
+    // Check for duplicate email (excluding current member)
+    if (teamMembers.some(member => 
+      member.id !== selectedMember.id && 
+      member.email.toLowerCase() === newMember.email.toLowerCase()
+    )) {
+      alert('A team member with this email already exists');
+      return;
+    }
+
     setTeamMembers(teamMembers.map(member => 
       member.id === selectedMember.id ? { ...newMember, id: selectedMember.id, lastUpdated: new Date().toISOString().split('T')[0] } : member
     ));
     setShowEditMemberModal(false);
     setSelectedMember(null);
+    resetNewMember();
     addActivity(`Updated team member: ${newMember.name}`);
   };
 
@@ -452,14 +497,14 @@ export default function ManagerDashboard() {
                 placeholder="Search team members..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>
           </div>
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="all">All Statuses</option>
             <option value="Completed">Completed</option>
@@ -477,8 +522,27 @@ export default function ManagerDashboard() {
       </div>
 
       {/* Team Members Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {filteredTeamMembers.map(member => (
+      {filteredTeamMembers.length === 0 ? (
+        <div className="text-center py-12">
+          <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No team members found</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            {searchTerm || selectedStatus !== 'all' 
+              ? 'Try adjusting your search or filter criteria' 
+              : 'Get started by adding your first team member'}
+          </p>
+          {(!searchTerm && selectedStatus === 'all') && (
+            <button 
+              onClick={() => setShowAddMemberModal(true)}
+              className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+            >
+              Add Team Member
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {filteredTeamMembers.map(member => (
           <div key={member.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
@@ -543,7 +607,7 @@ export default function ManagerDashboard() {
                 </span>
                 <button 
                   onClick={() => handleReviewMember(member)}
-                  className="text-black dark:text-white hover:text-indigo-700 text-sm"
+                  className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 text-sm"
                 >
                   Review
                 </button>
@@ -551,7 +615,8 @@ export default function ManagerDashboard() {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 
@@ -796,7 +861,7 @@ export default function ManagerDashboard() {
             ))}
           </div>
           <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-b-xl">
-            <button className="w-full text-center text-sm text-black dark:text-white hover:text-indigo-700">
+            <button className="w-full text-center text-sm text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300">
               View All Notifications
             </button>
           </div>
@@ -817,10 +882,19 @@ export default function ManagerDashboard() {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setSelectedTab(tab.id)}
+                  onClick={() => {
+                    setSelectedTab(tab.id);
+                    // Close all modals when switching tabs
+                    setShowAddMemberModal(false);
+                    setShowEditMemberModal(false);
+                    setShowViewMemberModal(false);
+                    setShowScheduleReviewModal(false);
+                    setShowTeamMeetingModal(false);
+                    setSelectedMember(null);
+                  }}
                   className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
                     selectedTab === tab.id
-                      ? 'border-indigo-500 text-black dark:text-white'
+                      ? 'border-black dark:border-white text-black dark:text-white'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
@@ -884,7 +958,7 @@ export default function ManagerDashboard() {
                     type="text"
                     value={newMember.position}
                     onChange={(e) => setNewMember({...newMember, position: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     required
                   />
                 </div>
@@ -893,7 +967,7 @@ export default function ManagerDashboard() {
                   <select
                     value={newMember.performance}
                     onChange={(e) => setNewMember({...newMember, performance: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   >
                     <option value="Exceeds Expectations">Exceeds Expectations</option>
                     <option value="Meets Expectations">Meets Expectations</option>
@@ -909,7 +983,7 @@ export default function ManagerDashboard() {
                     step="0.1"
                     value={newMember.rating}
                     onChange={(e) => setNewMember({...newMember, rating: parseFloat(e.target.value)})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   />
                 </div>
                 <div className="flex space-x-3 pt-4">
@@ -956,7 +1030,7 @@ export default function ManagerDashboard() {
                     type="text"
                     value={newMember.name}
                     onChange={(e) => setNewMember({...newMember, name: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     required
                   />
                 </div>
@@ -966,7 +1040,7 @@ export default function ManagerDashboard() {
                     type="email"
                     value={newMember.email}
                     onChange={(e) => setNewMember({...newMember, email: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     required
                   />
                 </div>
@@ -976,7 +1050,7 @@ export default function ManagerDashboard() {
                     type="text"
                     value={newMember.position}
                     onChange={(e) => setNewMember({...newMember, position: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     required
                   />
                 </div>
@@ -985,7 +1059,7 @@ export default function ManagerDashboard() {
                   <select
                     value={newMember.performance}
                     onChange={(e) => setNewMember({...newMember, performance: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   >
                     <option value="Exceeds Expectations">Exceeds Expectations</option>
                     <option value="Meets Expectations">Meets Expectations</option>
@@ -997,7 +1071,7 @@ export default function ManagerDashboard() {
                   <select
                     value={newMember.status}
                     onChange={(e) => setNewMember({...newMember, status: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   >
                     <option value="Not Started">Not Started</option>
                     <option value="Pending Review">Pending Review</option>
@@ -1013,7 +1087,7 @@ export default function ManagerDashboard() {
                     step="0.1"
                     value={newMember.rating}
                     onChange={(e) => setNewMember({...newMember, rating: parseFloat(e.target.value)})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   />
                 </div>
                 <div className="flex space-x-3 pt-4">
@@ -1143,7 +1217,7 @@ export default function ManagerDashboard() {
               <form onSubmit={(e) => { e.preventDefault(); setShowScheduleReviewModal(false); addActivity('Scheduled team review meeting'); alert('Review scheduled successfully!'); }} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Review Type</label>
-                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                     <option value="quarterly">Quarterly Review</option>
                     <option value="annual">Annual Review</option>
                     <option value="mid-year">Mid-Year Review</option>
@@ -1154,7 +1228,7 @@ export default function ManagerDashboard() {
                   <label className="block text-sm font-medium mb-2">Review Date</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     required
                   />
                 </div>
@@ -1173,7 +1247,7 @@ export default function ManagerDashboard() {
                   <label className="block text-sm font-medium mb-2">Notes</label>
                   <textarea
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     placeholder="Additional notes for the review..."
                   />
                 </div>
@@ -1219,7 +1293,7 @@ export default function ManagerDashboard() {
                   <label className="block text-sm font-medium mb-2">Meeting Title</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     placeholder="Weekly Team Standup"
                     required
                   />
@@ -1228,13 +1302,13 @@ export default function ManagerDashboard() {
                   <label className="block text-sm font-medium mb-2">Date & Time</label>
                   <input
                     type="datetime-local"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Duration (minutes)</label>
-                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                     <option value="30">30 minutes</option>
                     <option value="60">1 hour</option>
                     <option value="90">1.5 hours</option>
@@ -1243,7 +1317,7 @@ export default function ManagerDashboard() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Meeting Type</label>
-                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                  <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                     <option value="standup">Daily Standup</option>
                     <option value="review">Sprint Review</option>
                     <option value="planning">Planning Meeting</option>
@@ -1255,7 +1329,7 @@ export default function ManagerDashboard() {
                   <label className="block text-sm font-medium mb-2">Agenda</label>
                   <textarea
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     placeholder="Meeting agenda items..."
                   />
                 </div>

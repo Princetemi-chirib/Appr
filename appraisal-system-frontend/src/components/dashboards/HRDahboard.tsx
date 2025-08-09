@@ -685,7 +685,12 @@ export default function HRDashboard() {
   };
 
   const handleDeleteTask = (taskId: number) => {
-    setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    
+    if (confirm(`Are you sure you want to delete the task "${task.title}"? This action cannot be undone.`)) {
+      setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+    }
   };
 
   const handleTaskStatusChange = (taskId: number, newStatus: string) => {
@@ -728,7 +733,12 @@ export default function HRDashboard() {
   };
 
   const handleDeleteEmployee = (employeeId: number) => {
-    setEmployees(prevEmployees => prevEmployees.filter(emp => emp.id !== employeeId));
+    const employee = employees.find(emp => emp.id === employeeId);
+    if (!employee) return;
+    
+    if (confirm(`Are you sure you want to delete ${employee.name}? This action cannot be undone.`)) {
+      setEmployees(prevEmployees => prevEmployees.filter(emp => emp.id !== employeeId));
+    }
   };
 
   const handleSaveEmployee = (employeeData: any) => {
