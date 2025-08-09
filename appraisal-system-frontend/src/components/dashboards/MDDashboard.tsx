@@ -141,11 +141,11 @@ export default function MDDashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'On Track':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white';
       case 'At Risk':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-gray-500 dark:bg-gray-500 text-white dark:text-white border-gray-500 dark:border-gray-500';
       case 'Behind':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-gray-400 dark:bg-gray-600 text-white dark:text-white border-gray-400 dark:border-gray-600';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
@@ -154,9 +154,9 @@ export default function MDDashboard() {
   const getImpactColor = (impact: string) => {
     switch (impact) {
       case 'High':
-        return 'text-green-600 bg-green-100';
+        return 'text-white dark:text-black bg-black dark:bg-white';
       case 'Medium':
-        return 'text-blue-600 bg-blue-100';
+        return 'text-white dark:text-black bg-gray-600 dark:bg-gray-400';
       case 'Low':
         return 'text-gray-600 bg-gray-100';
       default:
@@ -175,11 +175,11 @@ export default function MDDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-2">Executive Dashboard</h2>
-            <p className="text-purple-100">Company-wide performance and strategic overview</p>
+            <p className="text-gray-100 dark:text-gray-200">Company-wide performance and strategic overview</p>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold">{mockCompanyMetrics.averageRating}</div>
-            <div className="text-purple-100">Company Average Rating</div>
+            <div className="text-gray-100 dark:text-gray-200">Company Average Rating</div>
           </div>
         </div>
       </div>
@@ -192,7 +192,7 @@ export default function MDDashboard() {
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Employees</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{mockCompanyMetrics.totalEmployees}</p>
             </div>
-            <Users className="h-8 w-8 text-blue-600" />
+            <Users className="h-8 w-8 text-gray-700 dark:text-gray-300" />
           </div>
         </div>
         
@@ -200,9 +200,9 @@ export default function MDDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Goal Attainment</p>
-              <p className="text-2xl font-bold text-green-600">{mockCompanyMetrics.goalAttainment}%</p>
+              <p className="text-2xl font-bold text-black dark:text-white">{mockCompanyMetrics.goalAttainment}%</p>
             </div>
-            <Target className="h-8 w-8 text-green-600" />
+            <Target className="h-8 w-8 text-black dark:text-white" />
           </div>
         </div>
         
@@ -277,7 +277,7 @@ export default function MDDashboard() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm">Employee Satisfaction</span>
-              <span className="font-semibold text-green-600">{mockCompanyMetrics.companySatisfaction}/5</span>
+              <span className="font-semibold text-black dark:text-white">{mockCompanyMetrics.companySatisfaction}/5</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
               <div className="bg-green-600 h-2 rounded-full" style={{ width: `${(mockCompanyMetrics.companySatisfaction / 5) * 100}%` }}></div>
@@ -285,7 +285,7 @@ export default function MDDashboard() {
             
             <div className="flex justify-between items-center">
               <span className="text-sm">Budget Utilization</span>
-              <span className="font-semibold text-blue-600">{mockCompanyMetrics.budgetUtilization}%</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300">{mockCompanyMetrics.budgetUtilization}%</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
               <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${mockCompanyMetrics.budgetUtilization}%` }}></div>
@@ -361,12 +361,12 @@ export default function MDDashboard() {
               
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600 dark:text-gray-400">Productivity</span>
-                <span className="font-medium text-green-600">{dept.productivity}%</span>
+                <span className="font-medium text-black dark:text-white">{dept.productivity}%</span>
               </div>
               
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600 dark:text-gray-400">Satisfaction</span>
-                <span className="font-medium text-blue-600">{dept.satisfaction}/5</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">{dept.satisfaction}/5</span>
               </div>
               
               <div className="flex justify-between items-center">
@@ -445,7 +445,7 @@ export default function MDDashboard() {
                       <button className="text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400">
                         <Eye className="h-4 w-4" />
                       </button>
-                      <button className="text-green-600 hover:text-green-900 dark:hover:text-green-400">
+                      <button className="text-black dark:text-white hover:text-green-900 dark:hover:text-green-400">
                         <Award className="h-4 w-4" />
                       </button>
                     </div>
@@ -469,7 +469,7 @@ export default function MDDashboard() {
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span>Exceeds Expectations</span>
-              <span className="font-semibold text-green-600">35%</span>
+              <span className="font-semibold text-black dark:text-white">35%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-green-600 h-2 rounded-full" style={{ width: '35%' }}></div>
@@ -477,7 +477,7 @@ export default function MDDashboard() {
             
             <div className="flex justify-between items-center">
               <span>Meets Expectations</span>
-              <span className="font-semibold text-blue-600">55%</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300">55%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-blue-600 h-2 rounded-full" style={{ width: '55%' }}></div>
@@ -498,11 +498,11 @@ export default function MDDashboard() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span>Total Revenue Growth</span>
-              <span className="font-semibold text-green-600">+18%</span>
+              <span className="font-semibold text-black dark:text-white">+18%</span>
             </div>
             <div className="flex justify-between items-center">
               <span>Employee Retention</span>
-              <span className="font-semibold text-blue-600">{mockCompanyMetrics.retentionRate}%</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300">{mockCompanyMetrics.retentionRate}%</span>
             </div>
             <div className="flex justify-between items-center">
               <span>Customer Satisfaction</span>

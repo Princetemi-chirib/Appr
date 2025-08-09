@@ -543,7 +543,7 @@ export default function ManagerDashboard() {
                 </span>
                 <button 
                   onClick={() => handleReviewMember(member)}
-                  className="text-indigo-600 hover:text-indigo-700 text-sm"
+                  className="text-black dark:text-white hover:text-indigo-700 text-sm"
                 >
                   Review
                 </button>
@@ -561,7 +561,7 @@ export default function ManagerDashboard() {
         <h3 className="text-xl font-semibold">Performance Reviews</h3>
         <button 
           onClick={handleScheduleReview}
-          className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
         >
           <Plus className="h-4 w-4" />
           <span>Schedule Review</span>
@@ -628,7 +628,7 @@ export default function ManagerDashboard() {
                       )}
                       <button 
                         onClick={() => handleViewMember(member)}
-                        className="text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400"
+                        className="text-black dark:text-white hover:text-indigo-900 dark:hover:text-indigo-400"
                         title="View Details"
                       >
                         <Eye className="h-4 w-4" />
@@ -683,7 +683,7 @@ export default function ManagerDashboard() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span>Average Rating</span>
-              <span className="font-semibold text-indigo-600">{mockTeamMetrics.averageRating}</span>
+              <span className="font-semibold text-black dark:text-white">{mockTeamMetrics.averageRating}</span>
             </div>
             <div className="flex justify-between items-center">
               <span>Completion Rate</span>
@@ -706,7 +706,7 @@ export default function ManagerDashboard() {
           <h4 className="font-semibold">Reports</h4>
           <button 
             onClick={() => handleExportReport('All Reports')}
-            className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
           >
             <Download className="h-4 w-4" />
             <span>Export All</span>
@@ -718,21 +718,21 @@ export default function ManagerDashboard() {
             onClick={() => handleExportReport('Performance Report')}
             className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            <BarChart3 className="h-5 w-5 text-indigo-600" />
+            <BarChart3 className="h-5 w-5 text-black dark:text-white" />
             <span>Performance Report</span>
           </button>
           <button 
             onClick={() => handleExportReport('Goals Report')}
             className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            <Target className="h-5 w-5 text-indigo-600" />
+            <Target className="h-5 w-5 text-black dark:text-white" />
             <span>Goals Report</span>
           </button>
           <button 
             onClick={() => handleExportReport('Trend Analysis')}
             className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            <TrendingUp className="h-5 w-5 text-indigo-600" />
+            <TrendingUp className="h-5 w-5 text-black dark:text-white" />
             <span>Trend Analysis</span>
           </button>
         </div>
@@ -796,7 +796,7 @@ export default function ManagerDashboard() {
             ))}
           </div>
           <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-b-xl">
-            <button className="w-full text-center text-sm text-indigo-600 hover:text-indigo-700">
+            <button className="w-full text-center text-sm text-black dark:text-white hover:text-indigo-700">
               View All Notifications
             </button>
           </div>
@@ -820,7 +820,7 @@ export default function ManagerDashboard() {
                   onClick={() => setSelectedTab(tab.id)}
                   className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
                     selectedTab === tab.id
-                      ? 'border-indigo-500 text-indigo-600'
+                      ? 'border-indigo-500 text-black dark:text-white'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >

@@ -184,7 +184,7 @@ const TaskForm = ({
             required
             value={formData.title}
             onChange={(e) => handleInputChange('title', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             placeholder="Enter task title"
           />
         </div>
@@ -199,7 +199,7 @@ const TaskForm = ({
             rows={4}
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             placeholder="Describe the task in detail"
           />
         </div>
@@ -218,7 +218,7 @@ const TaskForm = ({
               handleInputChange('assignedToId', selectedEmployee?.id?.toString() || '');
               handleInputChange('team', selectedEmployee?.team || '');
             }}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">Select Employee</option>
             {employees.map(employee => (
@@ -237,7 +237,7 @@ const TaskForm = ({
           <select
             value={formData.team}
             onChange={(e) => handleInputChange('team', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">Select Team</option>
             {teams.map(team => (
@@ -254,7 +254,7 @@ const TaskForm = ({
           <select
             value={formData.category}
             onChange={(e) => handleInputChange('category', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">Select Category</option>
             {categories.map(category => (
@@ -272,7 +272,7 @@ const TaskForm = ({
             required
             value={formData.priority}
             onChange={(e) => handleInputChange('priority', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             {priorities.map(priority => (
               <option key={priority} value={priority}>{priority}</option>
@@ -290,7 +290,7 @@ const TaskForm = ({
             required
             value={formData.dueDate}
             onChange={(e) => handleInputChange('dueDate', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           />
         </div>
 
@@ -302,7 +302,7 @@ const TaskForm = ({
           <select
             value={formData.status}
             onChange={(e) => handleInputChange('status', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             {taskStatuses.map(status => (
               <option key={status} value={status}>{status}</option>
@@ -322,7 +322,7 @@ const TaskForm = ({
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center space-x-2"
+          className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 border border-black dark:border-white transition-colors flex items-center space-x-2"
         >
           <Send className="h-4 w-4" />
           <span>{task ? 'Update Task' : 'Assign Task'}</span>
@@ -384,7 +384,7 @@ const EmployeeForm = ({
             required
             value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             placeholder="Enter employee full name"
           />
         </div>
@@ -401,7 +401,7 @@ const EmployeeForm = ({
               required
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="employee@company.com"
             />
           </div>
@@ -418,7 +418,7 @@ const EmployeeForm = ({
               type="tel"
               value={formData.phone}
               onChange={(e) => handleInputChange('phone', e.target.value)}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="+1 (555) 123-4567"
             />
           </div>
@@ -435,7 +435,7 @@ const EmployeeForm = ({
               required
               value={formData.team}
               onChange={(e) => handleInputChange('team', e.target.value)}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             >
               <option value="">Select Team</option>
               {teams.map(team => (
@@ -454,7 +454,7 @@ const EmployeeForm = ({
             required
             value={formData.position}
             onChange={(e) => handleInputChange('position', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">Select Position</option>
             {positions.map(position => (
@@ -471,7 +471,7 @@ const EmployeeForm = ({
           <select
             value={formData.manager}
             onChange={(e) => handleInputChange('manager', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">Select Manager</option>
             {managers.map(manager => (
@@ -490,7 +490,7 @@ const EmployeeForm = ({
             required
             value={formData.hireDate}
             onChange={(e) => handleInputChange('hireDate', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           />
         </div>
 
@@ -503,7 +503,7 @@ const EmployeeForm = ({
             type="number"
             value={formData.salary}
             onChange={(e) => handleInputChange('salary', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             placeholder="50000"
           />
         </div>
@@ -519,7 +519,7 @@ const EmployeeForm = ({
               rows={3}
               value={formData.address}
               onChange={(e) => handleInputChange('address', e.target.value)}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Enter employee address"
             />
           </div>
@@ -533,7 +533,7 @@ const EmployeeForm = ({
           <select
             value={formData.appraisalStatus}
             onChange={(e) => handleInputChange('appraisalStatus', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             {['Not Started', 'Self-Review Complete', 'Manager Review Pending', 'HR Review', 'Finalized'].map(status => (
               <option key={status} value={status}>{status}</option>
@@ -549,7 +549,7 @@ const EmployeeForm = ({
           <select
             value={formData.performance}
             onChange={(e) => handleInputChange('performance', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             {['Exceeds Expectations', 'Meets Expectations', 'Below Expectations'].map(performance => (
               <option key={performance} value={performance}>{performance}</option>
@@ -569,7 +569,7 @@ const EmployeeForm = ({
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center space-x-2"
+          className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 border border-black dark:border-white transition-colors flex items-center space-x-2"
         >
           <User className="h-4 w-4" />
           <span>{employee ? 'Update Employee' : 'Add Employee'}</span>
@@ -616,26 +616,26 @@ export default function HRDashboard() {
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case 'Finalized':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white';
       case 'HR Review':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-gray-700 dark:bg-gray-300 text-white dark:text-black border-gray-700 dark:border-gray-300';
       case 'Manager Review Pending':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-gray-600 dark:bg-gray-400 text-white dark:text-black border-gray-600 dark:border-gray-400';
       case 'Self-Review Complete':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-gray-500 dark:bg-gray-500 text-white dark:text-white border-gray-500 dark:border-gray-500';
       default:
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-gray-400 dark:bg-gray-600 text-white dark:text-white border-gray-400 dark:border-gray-600';
     }
   };
 
   const getPerformanceColor = (performance: string) => {
     switch (performance) {
       case 'Exceeds Expectations':
-        return 'text-green-600';
+        return 'text-black dark:text-white';
       case 'Meets Expectations':
-        return 'text-blue-600';
+        return 'text-gray-700 dark:text-gray-300';
       case 'Below Expectations':
-        return 'text-red-600';
+        return 'text-gray-500 dark:text-gray-400';
       default:
         return 'text-gray-600';
     }
@@ -645,13 +645,13 @@ export default function HRDashboard() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'Urgent':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-gray-400 dark:bg-gray-600 text-white dark:text-white border-gray-400 dark:border-gray-600';
       case 'High':
         return 'bg-orange-100 text-orange-800 border-orange-200';
       case 'Medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-gray-500 dark:bg-gray-500 text-white dark:text-white border-gray-500 dark:border-gray-500';
       case 'Low':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
@@ -660,15 +660,15 @@ export default function HRDashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Completed':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white';
       case 'In Progress':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-gray-600 dark:bg-gray-400 text-white dark:text-black border-gray-600 dark:border-gray-400';
       case 'Under Review':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-gray-700 dark:bg-gray-300 text-white dark:text-black border-gray-700 dark:border-gray-300';
       case 'On Hold':
         return 'bg-gray-100 text-gray-800 border-gray-200';
       case 'Not Started':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-gray-400 dark:bg-gray-600 text-white dark:text-white border-gray-400 dark:border-gray-600';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
@@ -793,7 +793,7 @@ export default function HRDashboard() {
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Employees</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.totalEmployees}</p>
             </div>
-            <Users className="h-8 w-8 text-blue-600" />
+            <Users className="h-8 w-8 text-gray-700 dark:text-gray-300" />
           </div>
         </div>
         
@@ -801,9 +801,9 @@ export default function HRDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Completed</p>
-              <p className="text-3xl font-bold text-green-600">{stats.completedAppraisals}</p>
+              <p className="text-3xl font-bold text-black dark:text-white">{stats.completedAppraisals}</p>
             </div>
-            <CheckCircle className="h-8 w-8 text-green-600" />
+            <CheckCircle className="h-8 w-8 text-black dark:text-white" />
           </div>
         </div>
         
@@ -867,11 +867,11 @@ export default function HRDashboard() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{stats.totalTasks}</div>
+            <div className="text-2xl font-bold text-gray-700 dark:text-gray-300">{stats.totalTasks}</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Total Tasks</div>
           </div>
           <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">{stats.completedTasks}</div>
+            <div className="text-2xl font-bold text-black dark:text-white">{stats.completedTasks}</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
           </div>
           <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
@@ -879,7 +879,7 @@ export default function HRDashboard() {
             <div className="text-sm text-gray-600 dark:text-gray-400">In Progress</div>
           </div>
           <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-red-600">{stats.urgentTasks}</div>
+            <div className="text-2xl font-bold text-gray-500 dark:text-gray-400">{stats.urgentTasks}</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Urgent</div>
           </div>
         </div>
@@ -923,14 +923,14 @@ export default function HRDashboard() {
                 placeholder="Search employees..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>
           </div>
           <select
             value={selectedTeam}
             onChange={(e) => setSelectedTeam(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="all">All Teams</option>
             {mockTeams.map(team => (
@@ -940,7 +940,7 @@ export default function HRDashboard() {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="all">All Statuses</option>
             {statusOptions.map(status => (
@@ -998,10 +998,10 @@ export default function HRDashboard() {
                       <button className="text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400">
                         <Eye className="h-4 w-4" />
                       </button>
-                      <button className="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400">
+                      <button className="text-gray-700 dark:text-gray-300 hover:text-blue-900 dark:hover:text-blue-400">
                         <Edit className="h-4 w-4" />
                       </button>
-                      <button className="text-red-600 hover:text-red-900 dark:hover:text-red-400">
+                      <button className="text-gray-500 dark:text-gray-400 hover:text-red-900 dark:hover:text-red-400">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
@@ -1052,7 +1052,7 @@ export default function HRDashboard() {
                   <button className="text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400">
                     <Eye className="h-4 w-4" />
                   </button>
-                  <button className="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400">
+                  <button className="text-gray-700 dark:text-gray-300 hover:text-blue-900 dark:hover:text-blue-400">
                     <Edit className="h-4 w-4" />
                   </button>
                 </div>
@@ -1072,7 +1072,7 @@ export default function HRDashboard() {
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span>Exceeds Expectations</span>
-              <span className="font-semibold text-green-600">25%</span>
+              <span className="font-semibold text-black dark:text-white">25%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-green-600 h-2 rounded-full" style={{ width: '25%' }}></div>
@@ -1080,7 +1080,7 @@ export default function HRDashboard() {
             
             <div className="flex justify-between items-center">
               <span>Meets Expectations</span>
-              <span className="font-semibold text-blue-600">60%</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300">60%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-blue-600 h-2 rounded-full" style={{ width: '60%' }}></div>
@@ -1088,7 +1088,7 @@ export default function HRDashboard() {
             
             <div className="flex justify-between items-center">
               <span>Below Expectations</span>
-              <span className="font-semibold text-red-600">15%</span>
+              <span className="font-semibold text-gray-500 dark:text-gray-400">15%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-red-600 h-2 rounded-full" style={{ width: '15%' }}></div>
@@ -1190,14 +1190,14 @@ export default function HRDashboard() {
                 placeholder="Search tasks..."
                 value={taskSearchTerm}
                 onChange={(e) => setTaskSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>
           </div>
           <select
             value={taskFilterTeam}
             onChange={(e) => setTaskFilterTeam(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="all">All Teams</option>
             {mockTeams.map(team => (
@@ -1207,7 +1207,7 @@ export default function HRDashboard() {
           <select
             value={taskFilterStatus}
             onChange={(e) => setTaskFilterStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="all">All Statuses</option>
             {taskStatuses.map(status => (
@@ -1217,7 +1217,7 @@ export default function HRDashboard() {
           <select
             value={taskFilterPriority}
             onChange={(e) => setTaskFilterPriority(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="all">All Priorities</option>
             {taskPriorities.map(priority => (
@@ -1304,7 +1304,7 @@ export default function HRDashboard() {
                       </button>
                       <button 
                         onClick={() => handleDeleteTask(task.id)}
-                        className="text-red-600 hover:text-red-900 dark:hover:text-red-400"
+                        className="text-gray-500 dark:text-gray-400 hover:text-red-900 dark:hover:text-red-400"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -1377,14 +1377,14 @@ export default function HRDashboard() {
                 placeholder="Search employees..."
                 value={employeeSearchTerm}
                 onChange={(e) => setEmployeeSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>
           </div>
           <select
             value={employeeFilterTeam}
             onChange={(e) => setEmployeeFilterTeam(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="all">All Teams</option>
             {mockTeams.map(team => (
@@ -1394,7 +1394,7 @@ export default function HRDashboard() {
           <select
             value={employeeFilterPosition}
             onChange={(e) => setEmployeeFilterPosition(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="all">All Positions</option>
             {mockPositions.map(pos => (
@@ -1404,7 +1404,7 @@ export default function HRDashboard() {
           <select
             value={employeeFilterManager}
             onChange={(e) => setEmployeeFilterManager(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="all">All Managers</option>
             {mockManagers.map(manager => (
@@ -1477,7 +1477,7 @@ export default function HRDashboard() {
                       </button>
                       <button 
                         onClick={() => handleDeleteEmployee(employee.id)}
-                        className="text-red-600 hover:text-red-900 dark:hover:text-red-400"
+                        className="text-gray-500 dark:text-gray-400 hover:text-red-900 dark:hover:text-red-400"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

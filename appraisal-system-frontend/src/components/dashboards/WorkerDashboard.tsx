@@ -160,11 +160,11 @@ export default function WorkerDashboard() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'High':
-        return 'text-red-600 bg-red-100';
+        return 'text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800';
       case 'Medium':
-        return 'text-yellow-600 bg-yellow-100';
+        return 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800';
       case 'Low':
-        return 'text-green-600 bg-green-100';
+        return 'text-black dark:text-white bg-gray-100 dark:bg-gray-800';
       default:
         return 'text-gray-600 bg-gray-100';
     }
@@ -173,9 +173,9 @@ export default function WorkerDashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Completed':
-        return 'text-green-600 bg-green-100';
+        return 'text-white dark:text-black bg-black dark:bg-white';
       case 'In Progress':
-        return 'text-blue-600 bg-blue-100';
+        return 'text-black dark:text-white bg-gray-200 dark:bg-gray-700';
       case 'Not Started':
         return 'text-gray-600 bg-gray-100';
       default:
@@ -186,11 +186,11 @@ export default function WorkerDashboard() {
   const getRatingColor = (rating: string) => {
     switch (rating) {
       case 'Exceeds Expectations':
-        return 'text-green-600';
+        return 'text-black dark:text-white';
       case 'Meets Expectations':
-        return 'text-blue-600';
+        return 'text-gray-700 dark:text-gray-300';
       case 'Below Expectations':
-        return 'text-red-600';
+        return 'text-gray-500 dark:text-gray-400';
       default:
         return 'text-gray-600';
     }
@@ -205,7 +205,7 @@ export default function WorkerDashboard() {
         key={section.id}
         className={`p-4 border rounded-lg cursor-pointer transition-all ${
           isActive 
-            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' 
+            ? 'border-black dark:border-white bg-gray-50 dark:bg-gray-900' 
             : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
         }`}
         onClick={() => handleSectionClick(section.id)}
@@ -213,11 +213,11 @@ export default function WorkerDashboard() {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
             {section.status === 'completed' ? (
-              <CheckCircle className="h-5 w-5 text-green-600" />
+              <CheckCircle className="h-5 w-5 text-black dark:text-white" />
             ) : section.status === 'in-progress' ? (
-              <Clock className="h-5 w-5 text-yellow-600" />
+              <Clock className="h-5 w-5 text-gray-600 dark:text-gray-400" />
             ) : (
-              <AlertCircle className="h-5 w-5 text-red-600" />
+              <AlertCircle className="h-5 w-5 text-gray-500 dark:text-gray-400" />
             )}
             <div>
               <h4 className="font-semibold">{section.title}</h4>
@@ -229,8 +229,8 @@ export default function WorkerDashboard() {
             <div className="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-1">
               <div 
                 className={`h-1 rounded-full ${
-                  section.progress === 100 ? 'bg-green-600' : 
-                  section.progress > 0 ? 'bg-yellow-600' : 'bg-gray-400'
+                  section.progress === 100 ? 'bg-black dark:bg-white' : 
+                  section.progress > 0 ? 'bg-gray-600 dark:bg-gray-400' : 'bg-gray-400'
                 }`}
                 style={{ width: `${section.progress}%` }}
               ></div>
@@ -248,7 +248,7 @@ export default function WorkerDashboard() {
                 <textarea
                   value={sectionData.answers[index] || ''}
                   onChange={(e) => handleAnswerChange(section.id, index, e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   rows={3}
                   placeholder="Enter your response..."
                 />
@@ -264,7 +264,7 @@ export default function WorkerDashboard() {
               </button>
               <button
                 onClick={() => handleSaveSection(section.id)}
-                className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
               >
                 <Save className="h-4 w-4" />
                 <span>Save Section</span>
@@ -283,11 +283,11 @@ export default function WorkerDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-2">Welcome back, Alex!</h2>
-            <p className="text-indigo-100">Here's your performance overview for this quarter</p>
+            <p className="text-gray-100 dark:text-gray-200">Here's your performance overview for this quarter</p>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold">4.2</div>
-            <div className="text-indigo-100">Current Rating</div>
+            <div className="text-gray-100 dark:text-gray-200">Current Rating</div>
           </div>
         </div>
       </div>
@@ -300,7 +300,7 @@ export default function WorkerDashboard() {
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Appraisal Status</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{appraisalStatus}</p>
             </div>
-            <FileText className="h-8 w-8 text-indigo-600" />
+            <FileText className="h-8 w-8 text-black dark:text-white" />
           </div>
         </div>
         
@@ -308,9 +308,9 @@ export default function WorkerDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Goals Progress</p>
-              <p className="text-2xl font-bold text-green-600">75%</p>
+              <p className="text-2xl font-bold text-black dark:text-white">75%</p>
             </div>
-            <Target className="h-8 w-8 text-green-600" />
+            <Target className="h-8 w-8 text-black dark:text-white" />
           </div>
         </div>
         
@@ -318,9 +318,9 @@ export default function WorkerDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Tasks Due</p>
-              <p className="text-2xl font-bold text-yellow-600">3</p>
+              <p className="text-2xl font-bold text-gray-600 dark:text-gray-400">3</p>
             </div>
-            <Clock className="h-8 w-8 text-yellow-600" />
+            <Clock className="h-8 w-8 text-gray-600 dark:text-gray-400" />
           </div>
         </div>
         
@@ -328,9 +328,9 @@ export default function WorkerDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Performance Trend</p>
-              <p className="text-2xl font-bold text-purple-600">+12%</p>
+              <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">+12%</p>
             </div>
-            <TrendingUp className="h-8 w-8 text-purple-600" />
+            <TrendingUp className="h-8 w-8 text-gray-700 dark:text-gray-300" />
           </div>
         </div>
       </div>
@@ -338,7 +338,7 @@ export default function WorkerDashboard() {
       {/* Appraisal Status */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
         <h3 className="text-xl font-semibold mb-4 flex items-center space-x-2">
-          <FileText className="h-5 w-5 text-indigo-600" />
+          <FileText className="h-5 w-5 text-black dark:text-white" />
           <span>Self-Appraisal</span>
         </h3>
         
@@ -351,7 +351,7 @@ export default function WorkerDashboard() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">Complete your self-assessment to help your manager provide better feedback</p>
             <button
               onClick={handleStartAppraisal}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+              className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
             >
               Start Self-Appraisal
             </button>
@@ -360,9 +360,9 @@ export default function WorkerDashboard() {
 
         {appraisalStatus === 'In Progress' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <div className="flex items-center space-x-3">
-                <Clock className="h-5 w-5 text-blue-600" />
+                <Clock className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                 <div>
                   <p className="font-medium">Appraisal in Progress</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Complete all sections to submit for review</p>
@@ -370,7 +370,7 @@ export default function WorkerDashboard() {
               </div>
               <button 
                 onClick={handleContinueAppraisal}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
               >
                 Continue
               </button>
@@ -384,9 +384,9 @@ export default function WorkerDashboard() {
 
         {appraisalStatus === 'Ready to Submit' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <div className="flex items-center space-x-3">
-                <CheckCircle className="h-5 w-5 text-green-600" />
+                <CheckCircle className="h-5 w-5 text-black dark:text-white" />
                 <div>
                   <p className="font-medium">Appraisal Complete!</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">All sections have been completed. Ready to submit for review.</p>
@@ -394,7 +394,7 @@ export default function WorkerDashboard() {
               </div>
               <button
                 onClick={handleSubmitAppraisal}
-                className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
               >
                 <Send className="h-4 w-4" />
                 <span>Submit Appraisal</span>
@@ -405,10 +405,10 @@ export default function WorkerDashboard() {
 
         {appraisalStatus === 'Submitted' && (
           <div className="text-center py-8">
-            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-8 w-8 text-black dark:text-white" />
             </div>
-            <h4 className="text-lg font-semibold mb-2 text-green-600">Appraisal Submitted!</h4>
+            <h4 className="text-lg font-semibold mb-2 text-black dark:text-white">Appraisal Submitted!</h4>
             <p className="text-gray-600 dark:text-gray-400">Your self-appraisal has been submitted for manager review.</p>
           </div>
         )}
@@ -436,7 +436,7 @@ export default function WorkerDashboard() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-semibold">My Goals</h3>
-        <button className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <button className="flex items-center space-x-2 bg-black dark:bg-white text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
           <Plus className="h-4 w-4" />
           <span>Add Goal</span>
         </button>
@@ -461,7 +461,7 @@ export default function WorkerDashboard() {
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                 <div 
-                  className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                  className="bg-black dark:bg-white h-2 rounded-full transition-all duration-300"
                   style={{ width: `${(goal.progress / goal.target) * 100}%` }}
                 ></div>
               </div>
@@ -469,7 +469,7 @@ export default function WorkerDashboard() {
             
             <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
               <span>Due: {goal.dueDate}</span>
-              <button className="text-indigo-600 hover:text-indigo-700">
+              <button className="text-black dark:text-white hover:text-indigo-700">
                 <Edit className="h-4 w-4" />
               </button>
             </div>
@@ -483,7 +483,7 @@ export default function WorkerDashboard() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-semibold">My Tasks</h3>
-        <button className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <button className="flex items-center space-x-2 bg-black dark:bg-white text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
           <Plus className="h-4 w-4" />
           <span>Add Task</span>
         </button>
@@ -522,10 +522,10 @@ export default function WorkerDashboard() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
-                      <button className="text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400">
+                      <button className="text-black dark:text-white hover:text-indigo-900 dark:hover:text-indigo-400">
                         <Eye className="h-4 w-4" />
                       </button>
-                      <button className="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400">
+                      <button className="text-gray-700 dark:text-gray-300 hover:text-blue-900 dark:hover:text-blue-400">
                         <Edit className="h-4 w-4" />
                       </button>
                     </div>
@@ -556,7 +556,7 @@ export default function WorkerDashboard() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-indigo-600">{performance.score}</p>
+                  <p className="text-2xl font-bold text-black dark:text-white">{performance.score}</p>
                   <p className="text-xs text-gray-600 dark:text-gray-400">Score</p>
                 </div>
               </div>
@@ -583,47 +583,47 @@ export default function WorkerDashboard() {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
         <div className="flex justify-between items-center mb-4">
           <h4 className="font-semibold">Skills Assessment</h4>
-          <button className="text-indigo-600 hover:text-indigo-700 text-sm">Update Skills</button>
+          <button className="text-black dark:text-white hover:text-indigo-700 text-sm">Update Skills</button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm">React Development</span>
-              <span className="text-sm font-medium text-green-600">Advanced</span>
+              <span className="text-sm font-medium text-black dark:text-white">Advanced</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div className="bg-green-600 h-2 rounded-full" style={{ width: '90%' }}></div>
+              <div className="bg-black dark:bg-white h-2 rounded-full" style={{ width: '90%' }}></div>
             </div>
           </div>
           
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm">Project Management</span>
-              <span className="text-sm font-medium text-blue-600">Intermediate</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Intermediate</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div className="bg-blue-600 h-2 rounded-full" style={{ width: '70%' }}></div>
+              <div className="bg-gray-700 dark:bg-gray-300 h-2 rounded-full" style={{ width: '70%' }}></div>
             </div>
           </div>
           
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm">Communication</span>
-              <span className="text-sm font-medium text-green-600">Advanced</span>
+              <span className="text-sm font-medium text-black dark:text-white">Advanced</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div className="bg-green-600 h-2 rounded-full" style={{ width: '85%' }}></div>
+              <div className="bg-black dark:bg-white h-2 rounded-full" style={{ width: '85%' }}></div>
             </div>
           </div>
           
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm">Leadership</span>
-              <span className="text-sm font-medium text-yellow-600">Beginner</span>
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Beginner</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div className="bg-yellow-600 h-2 rounded-full" style={{ width: '40%' }}></div>
+              <div className="bg-gray-600 dark:bg-gray-400 h-2 rounded-full" style={{ width: '40%' }}></div>
             </div>
           </div>
         </div>
@@ -646,9 +646,12 @@ export default function WorkerDashboard() {
               onClick={() => setShowNotifications(!showNotifications)}
             >
               <Bell className="h-6 w-6" />
-              <span className="absolute top-1 right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+              <span className="absolute top-1 right-1 h-3 w-3 bg-black dark:bg-white rounded-full"></span>
             </button>
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+            <button 
+              onClick={() => alert('Contact Manager functionality - Connect with backend')}
+              className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+            >
               <MessageSquare className="h-4 w-4 inline mr-2" />
               Contact Manager
             </button>
@@ -673,7 +676,7 @@ export default function WorkerDashboard() {
                   onClick={() => setSelectedTab(tab.id)}
                   className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
                     selectedTab === tab.id
-                      ? 'border-indigo-500 text-indigo-600'
+                      ? 'border-indigo-500 text-black dark:text-white'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
