@@ -325,44 +325,44 @@ export default function ManagerDashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-black rounded-xl shadow p-6 border border-gray-300 dark:border-gray-700">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+        <div className="bg-white dark:bg-black rounded-xl shadow p-3 md:p-6 border border-gray-300 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Team Size</p>
-              <p className="text-2xl font-bold text-black dark:text-white">{mockTeamMetrics.totalMembers}</p>
+              <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Team Size</p>
+              <p className="text-lg md:text-2xl font-bold text-black dark:text-white">{mockTeamMetrics.totalMembers}</p>
             </div>
-            <Users className="h-8 w-8 text-black dark:text-white" />
+            <Users className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white" />
           </div>
         </div>
         
-        <div className="bg-white dark:bg-black rounded-xl shadow p-6 border border-gray-300 dark:border-gray-700">
+        <div className="bg-white dark:bg-black rounded-xl shadow p-3 md:p-6 border border-gray-300 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Completed</p>
-              <p className="text-2xl font-bold text-black dark:text-white">{mockTeamMetrics.completedAppraisals}</p>
+              <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Completed</p>
+              <p className="text-lg md:text-2xl font-bold text-black dark:text-white">{mockTeamMetrics.completedAppraisals}</p>
             </div>
-            <CheckCircle className="h-8 w-8 text-black dark:text-white" />
+            <CheckCircle className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white" />
           </div>
         </div>
         
-        <div className="bg-white dark:bg-black rounded-xl shadow p-6 border border-gray-300 dark:border-gray-700">
+        <div className="bg-white dark:bg-black rounded-xl shadow p-3 md:p-6 border border-gray-300 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Pending Review</p>
-              <p className="text-2xl font-bold text-black dark:text-white">{mockTeamMetrics.pendingReviews}</p>
+              <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Pending Review</p>
+              <p className="text-lg md:text-2xl font-bold text-black dark:text-white">{mockTeamMetrics.pendingReviews}</p>
             </div>
-            <Clock className="h-8 w-8 text-black dark:text-white" />
+            <Clock className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white" />
           </div>
         </div>
         
-        <div className="bg-white dark:bg-black rounded-xl shadow p-6 border border-gray-300 dark:border-gray-700">
+        <div className="bg-white dark:bg-black rounded-xl shadow p-3 md:p-6 border border-gray-300 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Completion Rate</p>
-              <p className="text-2xl font-bold text-black dark:text-white">{mockTeamMetrics.completionRate}%</p>
+              <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Completion Rate</p>
+              <p className="text-lg md:text-2xl font-bold text-black dark:text-white">{mockTeamMetrics.completionRate}%</p>
             </div>
-            <TrendingUp className="h-8 w-8 text-black dark:text-white" />
+            <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white" />
           </div>
         </div>
       </div>
@@ -477,30 +477,30 @@ export default function ManagerDashboard() {
       </div>
 
       {/* Team Members Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {filteredTeamMembers.map(member => (
-          <div key={member.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+          <div key={member.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-black dark:bg-white rounded-full flex items-center justify-center text-white dark:text-black font-bold text-sm md:text-lg">
                   {member.name.charAt(0)}
                 </div>
                 <div>
-                  <h4 className="font-semibold">{member.name}</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{member.position}</p>
+                  <h4 className="font-semibold text-sm md:text-base">{member.name}</h4>
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">{member.position}</p>
                 </div>
               </div>
-              <div className="flex space-x-2">
+              <div className="flex space-x-1 md:space-x-2">
                 <button 
                   onClick={() => handleViewMember(member)}
-                  className="text-indigo-600 hover:text-indigo-700"
+                  className="p-2 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                   title="View Details"
                 >
                   <Eye className="h-4 w-4" />
                 </button>
                 <button 
                   onClick={() => handleEditMember(member)}
-                  className="text-blue-600 hover:text-blue-700"
+                  className="p-2 text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                   title="Edit Member"
                 >
                   <Edit className="h-4 w-4" />
@@ -843,8 +843,8 @@ export default function ManagerDashboard() {
 
       {/* Add Member Modal */}
       {showAddMemberModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md mx-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold">Add Team Member</h3>
@@ -856,7 +856,7 @@ export default function ManagerDashboard() {
                 </button>
               </div>
             </div>
-            <div className="p-6">
+            <div className="p-4 md:p-6">
               <form onSubmit={(e) => { e.preventDefault(); handleAddMember(); }} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Name</label>
@@ -864,7 +864,7 @@ export default function ManagerDashboard() {
                     type="text"
                     value={newMember.name}
                     onChange={(e) => setNewMember({...newMember, name: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base"
                     required
                   />
                 </div>
@@ -874,7 +874,7 @@ export default function ManagerDashboard() {
                     type="email"
                     value={newMember.email}
                     onChange={(e) => setNewMember({...newMember, email: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full px-3 py-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base"
                     required
                   />
                 </div>

@@ -618,13 +618,13 @@ export default function SettingsPage() {
 
   return (
     <Layout userRole={userRole} onRoleChange={onRoleChange}>
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {/* Header */}
-        <div className="bg-white dark:bg-black rounded-xl shadow p-6 border border-gray-300 dark:border-gray-700">
-          <div className="flex items-center justify-between">
+        <div className="bg-white dark:bg-black rounded-xl shadow p-4 md:p-6 border border-gray-300 dark:border-gray-700">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
             <div>
-              <h1 className="text-2xl font-bold text-black dark:text-white">Settings</h1>
-              <p className="text-gray-600 dark:text-gray-400">Manage your account preferences and security settings</p>
+              <h1 className="text-xl md:text-2xl font-bold text-black dark:text-white">Settings</h1>
+              <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base">Manage your account preferences and security settings</p>
             </div>
             <div className="flex space-x-3">
               <button
@@ -652,7 +652,23 @@ export default function SettingsPage() {
 
         {/* Settings Navigation */}
         <div className="bg-white dark:bg-black rounded-xl shadow border border-gray-300 dark:border-gray-700">
-          <div className="border-b border-gray-200 dark:border-gray-700">
+          {/* Mobile Tab Selector */}
+          <div className="md:hidden p-4 border-b border-gray-200 dark:border-gray-700">
+            <select
+              value={activeTab}
+              onChange={(e) => setActiveTab(e.target.value)}
+              className="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-base"
+            >
+              {tabs.map((tab) => (
+                <option key={tab.id} value={tab.id}>
+                  {tab.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Desktop Tab Navigation */}
+          <div className="hidden md:block border-b border-gray-200 dark:border-gray-700">
             <nav className="flex space-x-8 px-6">
               {tabs.map(tab => {
                 const Icon = tab.icon;
@@ -675,7 +691,7 @@ export default function SettingsPage() {
           </div>
 
           {/* Settings Content */}
-          <div className="p-6">
+          <div className="p-4 md:p-6">
             {activeTab === 'profile' && renderProfileSettings()}
             {activeTab === 'notifications' && renderNotificationSettings()}
             {activeTab === 'privacy' && renderPrivacySettings()}

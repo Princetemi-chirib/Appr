@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building, Bell, LogOut, User, Settings, ChevronDown, Mail, Phone, Calendar, CheckCircle, AlertTriangle, Info, X } from 'lucide-react';
+import { Building, Bell, LogOut, User, Settings, ChevronDown, Mail, Phone, Calendar, CheckCircle, AlertTriangle, Info, X, Menu } from 'lucide-react';
 import NavButton from './ui/NavButton';
 import { mockRoles, roleIcons } from '@/lib/mock-data';
 
@@ -23,6 +23,35 @@ export const Layout: React.FC<LayoutProps> = ({ children, userRole, onRoleChange
   const router = useRouter();
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Close mobile sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showMobileSidebar && isMobile) {
+        const sidebar = document.getElementById('mobile-sidebar');
+        if (sidebar && !sidebar.contains(event.target as Node)) {
+          setShowMobileSidebar(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showMobileSidebar, isMobile]);
 
   // Mock user data
   const userData = {
@@ -152,37 +181,140 @@ export const Layout: React.FC<LayoutProps> = ({ children, userRole, onRoleChange
 
   return (
     <div className="min-h-screen bg-white dark:bg-black flex text-black dark:text-white">
-      {/* Sidebar Navigation */}
-      <aside className="w-64 bg-black dark:bg-white text-white dark:text-black flex-shrink-0 p-6 flex flex-col border-r border-gray-300 dark:border-gray-700">
-        <div className="flex items-center mb-10 space-x-2">
-          <Building className="h-8 w-8 text-white dark:text-black" />
-          <h1 className="text-2xl font-bold">Appraisal</h1>
+      {/* Mobile Header */}
+      {isMobile && (
+        <div className="fixed top-0 left-0 right-0 bg-white dark:bg-black border-b border-gray-300 dark:border-gray-700 z-40 px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => setShowMobileSidebar(true)}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+              <div className="flex items-center space-x-2">
+                <Building className="h-6 w-6 text-black dark:text-white" />
+                <h1 className="text-lg font-bold">Appraisal</h1>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              {/* Mobile Notification Button */}
+              <button 
+                onClick={handleNotificationClick}
+                className="relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-0 right-0 h-4 w-4 bg-black dark:bg-white rounded-full border-2 border-white dark:border-gray-900 text-xs text-white dark:text-black flex items-center justify-center font-bold">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+              
+              {/* Mobile Account Button */}
+              <button 
+                onClick={handleAccountClick}
+                className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span className="w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center text-white dark:text-black font-bold text-sm">
+                  {userData.avatar}
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
-        <nav className="flex-grow space-y-2">
-          <h2 className="text-gray-300 dark:text-gray-700 text-sm font-semibold mb-2 uppercase">Switch Role (Dev)</h2>
-          {mockRoles.map(role => {
-            const IconComponent = roleIcons[role.iconName as keyof typeof roleIcons];
-            return (
-              <NavButton
-                key={role.name}
-                icon={<IconComponent />}
-                text={role.name}
-                onClick={() => onRoleChange(role.name)}
-                active={userRole === role.name}
+      )}
+
+      {/* Mobile Sidebar Overlay */}
+      {isMobile && showMobileSidebar && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <aside 
+            id="mobile-sidebar"
+            className="w-80 max-w-[80vw] bg-black dark:bg-white text-white dark:text-black h-full p-6 flex flex-col border-r border-gray-300 dark:border-gray-700 transform transition-transform duration-300 ease-in-out"
+          >
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center space-x-2">
+                <Building className="h-8 w-8 text-white dark:text-black" />
+                <h1 className="text-2xl font-bold">Appraisal</h1>
+              </div>
+              <button
+                onClick={() => setShowMobileSidebar(false)}
+                className="p-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <nav className="flex-grow space-y-2">
+              <h2 className="text-gray-300 dark:text-gray-700 text-sm font-semibold mb-2 uppercase">Switch Role (Dev)</h2>
+              {mockRoles.map(role => {
+                const IconComponent = roleIcons[role.iconName as keyof typeof roleIcons];
+                return (
+                  <NavButton
+                    key={role.name}
+                    icon={<IconComponent />}
+                    text={role.name}
+                    onClick={() => {
+                      onRoleChange(role.name);
+                      setShowMobileSidebar(false);
+                    }}
+                    active={userRole === role.name}
+                  />
+                );
+              })}
+            </nav>
+            
+            <div className="mt-auto">
+              <NavButton 
+                icon={<LogOut />} 
+                text="Log Out" 
+                onClick={() => {
+                  onRoleChange(null);
+                  setShowMobileSidebar(false);
+                }} 
+                active={false} 
               />
-            );
-          })}
-        </nav>
-        <div className="mt-auto">
-          <NavButton icon={<LogOut />} text="Log Out" onClick={() => onRoleChange(null)} active={false} />
+            </div>
+          </aside>
         </div>
-      </aside>
+      )}
+
+      {/* Desktop Sidebar Navigation */}
+      {!isMobile && (
+        <aside className="w-64 bg-black dark:bg-white text-white dark:text-black flex-shrink-0 p-6 flex flex-col border-r border-gray-300 dark:border-gray-700">
+          <div className="flex items-center mb-10 space-x-2">
+            <Building className="h-8 w-8 text-white dark:text-black" />
+            <h1 className="text-2xl font-bold">Appraisal</h1>
+          </div>
+          <nav className="flex-grow space-y-2">
+            <h2 className="text-gray-300 dark:text-gray-700 text-sm font-semibold mb-2 uppercase">Switch Role (Dev)</h2>
+            {mockRoles.map(role => {
+              const IconComponent = roleIcons[role.iconName as keyof typeof roleIcons];
+              return (
+                <NavButton
+                  key={role.name}
+                  icon={<IconComponent />}
+                  text={role.name}
+                  onClick={() => onRoleChange(role.name)}
+                  active={userRole === role.name}
+                />
+              );
+            })}
+          </nav>
+          <div className="mt-auto">
+            <NavButton icon={<LogOut />} text="Log Out" onClick={() => onRoleChange(null)} active={false} />
+          </div>
+        </aside>
+      )}
 
       {/* Main Content Area */}
-      <main className="flex-1 p-8 overflow-y-auto">
-        <header className="flex justify-between items-center pb-6 border-b border-gray-200 dark:border-gray-700 mb-6">
-          <h2 className="text-3xl font-bold">{userRole} Dashboard</h2>
-          <div className="flex space-x-4">
+      <main className={`flex-1 overflow-y-auto ${isMobile ? 'pt-16' : ''}`}>
+        <div className={`${isMobile ? 'p-4' : 'p-8'}`}>
+          {/* Desktop Header */}
+          {!isMobile && (
+            <header className="flex justify-between items-center pb-6 border-b border-gray-200 dark:border-gray-700 mb-6">
+              <h2 className="text-3xl font-bold">{userRole} Dashboard</h2>
+              <div className="flex space-x-4">
             
             {/* Notification Dropdown */}
             <div className="relative">
@@ -375,15 +507,36 @@ export const Layout: React.FC<LayoutProps> = ({ children, userRole, onRoleChange
                 </div>
               )}
             </div>
-          </div>
-        </header>
-        {children}
+              </div>
+            </header>
+          )}
+
+          {/* Mobile Title */}
+          {isMobile && (
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold">{userRole} Dashboard</h2>
+            </div>
+          )}
+
+          {children}
+        </div>
       </main>
 
       {/* Backdrop to close dropdowns when clicking outside */}
-      {(showAccountDropdown || showNotificationDropdown) && (
+      {(showAccountDropdown || showNotificationDropdown) && !isMobile && (
         <div 
           className="fixed inset-0 z-40" 
+          onClick={() => {
+            setShowAccountDropdown(false);
+            setShowNotificationDropdown(false);
+          }}
+        />
+      )}
+
+      {/* Mobile Backdrop */}
+      {(showAccountDropdown || showNotificationDropdown) && isMobile && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40" 
           onClick={() => {
             setShowAccountDropdown(false);
             setShowNotificationDropdown(false);

@@ -6,8 +6,8 @@ export default function SignupPage() {
   const { onSignup, onSwitchToLogin } = useAuth();
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white dark:bg-black">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg border border-black dark:border-white">
+    <div className="flex items-center justify-center min-h-screen bg-white dark:bg-black p-4">
+      <div className="w-full max-w-md p-6 md:p-8 space-y-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg border border-black dark:border-white">
         <h2 className="text-3xl font-bold text-center text-black dark:text-white">Create an Account</h2>
         <p className="text-center text-gray-700 dark:text-gray-300">Join your team and get started</p>
         <form onSubmit={(e) => { e.preventDefault(); onSignup(); }} className="space-y-4">

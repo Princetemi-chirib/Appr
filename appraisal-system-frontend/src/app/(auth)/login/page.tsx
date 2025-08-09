@@ -5,8 +5,8 @@ import { Building } from 'lucide-react';
 export default function LoginPage() {
   const { onLogin, onSwitchToSignup } = useAuth();
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white dark:bg-black">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg border border-black dark:border-white">
+    <div className="flex items-center justify-center min-h-screen bg-white dark:bg-black p-4">
+      <div className="w-full max-w-md p-6 md:p-8 space-y-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg border border-black dark:border-white">
         <div className="flex flex-col items-center">
           <div className="flex items-center space-x-2 mb-4">
             <Building className="h-10 w-10 text-black dark:text-white" />
