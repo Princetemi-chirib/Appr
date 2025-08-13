@@ -38,31 +38,176 @@ import {
   getObjectiveById
 } from '../../lib/mock-data';
 
-// Enhanced mock data for worker dashboard
+// Enhanced mock data for worker dashboard with better structure
 const mockGoals = [
-  { id: 1, title: 'Complete Advanced React Course', category: 'Learning', progress: 75, target: 100, dueDate: '2024-03-15', status: 'In Progress' },
-  { id: 2, title: 'Lead 3 team meetings', category: 'Leadership', progress: 2, target: 3, dueDate: '2024-02-28', status: 'In Progress' },
-  { id: 3, title: 'Improve code review quality', category: 'Quality', progress: 90, target: 100, dueDate: '2024-01-31', status: 'Completed' },
+  { 
+    id: 1, 
+    title: 'Complete Advanced React Course', 
+    category: 'Learning', 
+    progress: 75, 
+    target: 100, 
+    dueDate: '2024-03-15', 
+    status: 'In Progress',
+    description: 'Master advanced React concepts including hooks, context, and performance optimization',
+    milestones: ['Complete Hooks module', 'Build advanced project', 'Pass final assessment'],
+    completedMilestones: 2
+  },
+  { 
+    id: 2, 
+    title: 'Lead 3 team meetings', 
+    category: 'Leadership', 
+    progress: 2, 
+    target: 3, 
+    dueDate: '2024-02-28', 
+    status: 'In Progress',
+    description: 'Take initiative in leading team discussions and project planning',
+    milestones: ['Schedule meetings', 'Prepare agendas', 'Facilitate discussions'],
+    completedMilestones: 2
+  },
+  { 
+    id: 3, 
+    title: 'Improve code review quality', 
+    category: 'Quality', 
+    progress: 90, 
+    target: 100, 
+    dueDate: '2024-01-31', 
+    status: 'Completed',
+    description: 'Enhance code review process and provide constructive feedback',
+    milestones: ['Review 50+ PRs', 'Provide detailed feedback', 'Mentor junior developers'],
+    completedMilestones: 3
+  },
 ];
 
 const mockTasks = [
-  { id: 1, title: 'Complete Q1 self-appraisal', priority: 'High', dueDate: '2024-01-31', status: 'Completed', category: 'Appraisal' },
-  { id: 2, title: 'Submit project documentation', priority: 'Medium', dueDate: '2024-02-15', status: 'In Progress', category: 'Project' },
-  { id: 3, title: 'Attend team training session', priority: 'Low', dueDate: '2024-02-20', status: 'Not Started', category: 'Training' },
-  { id: 4, title: 'Review peer code submissions', priority: 'Medium', dueDate: '2024-02-10', status: 'In Progress', category: 'Collaboration' },
+  { 
+    id: 1, 
+    title: 'Complete Q1 self-appraisal', 
+    priority: 'High', 
+    dueDate: '2024-01-31', 
+    status: 'Completed', 
+    category: 'Appraisal',
+    description: 'Submit comprehensive self-assessment for Q1 performance review',
+    estimatedHours: 4,
+    actualHours: 3.5,
+    assignedBy: 'Manager',
+    relatedGoal: 'Performance Review'
+  },
+  { 
+    id: 2, 
+    title: 'Submit project documentation', 
+    priority: 'Medium', 
+    dueDate: '2024-02-15', 
+    status: 'In Progress', 
+    category: 'Project',
+    description: 'Complete technical documentation for the new feature implementation',
+    estimatedHours: 8,
+    actualHours: 5,
+    assignedBy: 'Project Lead',
+    relatedGoal: 'Project Delivery'
+  },
+  { 
+    id: 3, 
+    title: 'Attend team training session', 
+    priority: 'Low', 
+    dueDate: '2024-02-20', 
+    status: 'Not Started', 
+    category: 'Training',
+    description: 'Participate in the new development workflow training',
+    estimatedHours: 2,
+    actualHours: 0,
+    assignedBy: 'HR',
+    relatedGoal: 'Skill Development'
+  },
+  { 
+    id: 4, 
+    title: 'Review peer code submissions', 
+    priority: 'Medium', 
+    dueDate: '2024-02-10', 
+    status: 'In Progress', 
+    category: 'Collaboration',
+    description: 'Review and provide feedback on team member code submissions',
+    estimatedHours: 6,
+    actualHours: 4,
+    assignedBy: 'Team Lead',
+    relatedGoal: 'Team Collaboration'
+  },
 ];
 
 const mockPerformanceHistory = [
-  { period: 'Q4 2023', rating: 'Exceeds Expectations', score: 4.2, feedback: 'Excellent work on the new feature implementation' },
-  { period: 'Q3 2023', rating: 'Meets Expectations', score: 3.8, feedback: 'Good progress on assigned tasks' },
-  { period: 'Q2 2023', rating: 'Exceeds Expectations', score: 4.1, feedback: 'Outstanding collaboration and innovation' },
+  { 
+    period: 'Q4 2023', 
+    rating: 'Exceeds Expectations', 
+    score: 4.2, 
+    feedback: 'Excellent work on the new feature implementation. Demonstrated strong technical skills and leadership qualities.',
+    goalsAchieved: 4,
+    totalGoals: 4,
+    skillsImproved: ['React', 'TypeScript', 'Leadership'],
+    areasForGrowth: ['Public Speaking', 'Advanced Architecture']
+  },
+  { 
+    period: 'Q3 2023', 
+    rating: 'Meets Expectations', 
+    score: 3.8, 
+    feedback: 'Good progress on assigned tasks. Showed improvement in team collaboration and project delivery.',
+    goalsAchieved: 3,
+    totalGoals: 4,
+    skillsImproved: ['Teamwork', 'Time Management'],
+    areasForGrowth: ['Technical Leadership', 'Mentoring']
+  },
+  { 
+    period: 'Q2 2023', 
+    rating: 'Exceeds Expectations', 
+    score: 4.1, 
+    feedback: 'Outstanding collaboration and innovation. Led successful project delivery and mentored junior team members.',
+    goalsAchieved: 5,
+    totalGoals: 4,
+    skillsImproved: ['Project Management', 'Mentoring', 'Innovation'],
+    areasForGrowth: ['Strategic Thinking']
+  },
 ];
 
 const mockNotifications = [
-  { id: 1, message: 'Your manager has reviewed your appraisal', time: '2 hours ago', type: 'info' },
-  { id: 2, message: 'New goal assigned: Complete React certification', time: '1 day ago', type: 'goal' },
-  { id: 3, message: 'Team meeting scheduled for tomorrow', time: '2 days ago', type: 'meeting' },
+  { 
+    id: 1, 
+    message: 'Your manager has reviewed your appraisal', 
+    time: '2 hours ago', 
+    type: 'info',
+    read: false,
+    action: 'View Details'
+  },
+  { 
+    id: 2, 
+    message: 'New goal assigned: Complete React certification', 
+    time: '1 day ago', 
+    type: 'goal',
+    read: false,
+    action: 'Accept Goal'
+  },
+  { 
+    id: 3, 
+    message: 'Team meeting scheduled for tomorrow', 
+    time: '2 days ago', 
+    type: 'meeting',
+    read: true,
+    action: 'Add to Calendar'
+  },
 ];
+
+// Skills assessment data
+const mockSkills = {
+  technical: [
+    { name: 'React Development', level: 'Advanced', progress: 90, lastAssessed: '2024-01-15' },
+    { name: 'TypeScript', level: 'Intermediate', progress: 75, lastAssessed: '2024-01-10' },
+    { name: 'Node.js', level: 'Intermediate', progress: 70, lastAssessed: '2024-01-05' },
+    { name: 'Database Design', level: 'Beginner', progress: 45, lastAssessed: '2024-01-20' }
+  ],
+  soft: [
+    { name: 'Communication', level: 'Advanced', progress: 85, lastAssessed: '2024-01-12' },
+    { name: 'Leadership', level: 'Intermediate', progress: 65, lastAssessed: '2024-01-08' },
+    { name: 'Problem Solving', level: 'Advanced', progress: 80, lastAssessed: '2024-01-14' },
+    { name: 'Teamwork', level: 'Advanced', progress: 88, lastAssessed: '2024-01-16' }
+  ]
+};
 
 // Appraisal sections data
 const appraisalSections = [
@@ -108,15 +253,36 @@ const appraisalSections = [
 ];
 
 export default function WorkerDashboard() {
+  // Core dashboard state
   const [appraisalStatus, setAppraisalStatus] = useState('Not Started');
   const [selectedTab, setSelectedTab] = useState('overview');
   const [showNotifications, setShowNotifications] = useState(false);
+  const [currentSection, setCurrentSection] = useState<string | null>(null);
+  
+  // Enhanced data state with real-time updates
+  const [goals, setGoals] = useState(mockGoals);
+  const [tasks, setTasks] = useState(mockTasks);
+  const [performanceHistory, setPerformanceHistory] = useState(mockPerformanceHistory);
+  const [notifications, setNotifications] = useState(mockNotifications);
+  const [skills, setSkills] = useState(mockSkills);
+  
+  // Dashboard metrics state
+  const [dashboardMetrics, setDashboardMetrics] = useState({
+    totalGoals: mockGoals.length,
+    completedGoals: mockGoals.filter(g => g.status === 'Completed').length,
+    totalTasks: mockTasks.length,
+    completedTasks: mockTasks.filter(t => t.status === 'Completed').length,
+    overdueTasks: mockTasks.filter(t => new Date(t.dueDate) < new Date() && t.status !== 'Completed').length,
+    currentRating: 4.2,
+    performanceTrend: 12
+  });
+  
+  // Appraisal data state
   const [appraisalData, setAppraisalData] = useState({
     goals: { answers: ['', '', '', ''], completed: true },
     skills: { answers: ['', '', '', ''], completed: false },
     future: { answers: ['', '', '', ''], completed: false }
   });
-  const [currentSection, setCurrentSection] = useState<string | null>(null);
 
   // User Objective Selection & Weighting state
   const [selectedPerspective, setSelectedPerspective] = useState<number | null>(null);
@@ -635,6 +801,7 @@ export default function WorkerDashboard() {
     </div>
   );
 
+  // Utility functions for data management
   const getApprovedObjectives = () => {
     // In a real app, this would fetch from backend
     return mockUserObjectives.find(uo => uo.userId === 1 && uo.status === 'Approved');
@@ -643,6 +810,79 @@ export default function WorkerDashboard() {
   const isObjectiveSelected = (objectiveId: number) => {
     return objectiveId in selectedObjectives;
   };
+
+  // Update dashboard metrics when data changes
+  const updateDashboardMetrics = () => {
+    setDashboardMetrics({
+      totalGoals: goals.length,
+      completedGoals: goals.filter(g => g.status === 'Completed').length,
+      totalTasks: tasks.length,
+      completedTasks: tasks.filter(t => t.status === 'Completed').length,
+      overdueTasks: tasks.filter(t => new Date(t.dueDate) < new Date() && t.status !== 'Completed').length,
+      currentRating: performanceHistory[0]?.score || 4.2,
+      performanceTrend: 12
+    });
+  };
+
+  // Goal management functions
+  const updateGoalProgress = (goalId: number, progress: number) => {
+    setGoals(prevGoals => 
+      prevGoals.map(goal => 
+        goal.id === goalId 
+          ? { ...goal, progress, status: progress >= goal.target ? 'Completed' : 'In Progress' }
+          : goal
+      )
+    );
+  };
+
+  const addGoal = (newGoal: any) => {
+    const goal = { ...newGoal, id: Math.max(...goals.map(g => g.id)) + 1 };
+    setGoals(prev => [...prev, goal]);
+  };
+
+  // Task management functions
+  const updateTaskStatus = (taskId: number, status: string) => {
+    setTasks(prevTasks => 
+      prevTasks.map(task => 
+        task.id === taskId ? { ...task, status } : task
+      )
+    );
+  };
+
+  const addTask = (newTask: any) => {
+    const task = { ...newTask, id: Math.max(...tasks.map(t => t.id)) + 1 };
+    setTasks(prev => [...prev, task]);
+  };
+
+  // Notification management
+  const markNotificationAsRead = (notificationId: number) => {
+    setNotifications(prev => 
+      prev.map(notif => 
+        notif.id === notificationId ? { ...notif, read: true } : notif
+      )
+    );
+  };
+
+  // Skills management
+  const updateSkillLevel = (skillName: string, newLevel: string, newProgress: number) => {
+    setSkills(prev => ({
+      technical: prev.technical.map(skill => 
+        skill.name === skillName 
+          ? { ...skill, level: newLevel, progress: newProgress, lastAssessed: new Date().toISOString().split('T')[0] }
+          : skill
+      ),
+      soft: prev.soft.map(skill => 
+        skill.name === skillName 
+          ? { ...skill, level: newLevel, progress: newProgress, lastAssessed: new Date().toISOString().split('T')[0] }
+          : skill
+      )
+    }));
+  };
+
+  // Update metrics when data changes
+  useEffect(() => {
+    updateDashboardMetrics();
+  }, [goals, tasks, performanceHistory]);
 
   const renderAppraisalSection = (section: typeof appraisalSections[0]) => {
     const sectionData = appraisalData[section.id as keyof typeof appraisalData];
@@ -734,7 +974,7 @@ export default function WorkerDashboard() {
             <p className="text-gray-300">Here's your performance overview for Q1 2024</p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold">4.2</div>
+            <div className="text-3xl font-bold">{dashboardMetrics.currentRating}</div>
             <div className="text-gray-300">Current Rating</div>
           </div>
         </div>
@@ -746,7 +986,9 @@ export default function WorkerDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Goals</p>
-              <p className="text-lg md:text-2xl font-bold text-black dark:text-white">3/4</p>
+              <p className="text-lg md:text-2xl font-bold text-black dark:text-white">
+                {dashboardMetrics.completedGoals}/{dashboardMetrics.totalGoals}
+              </p>
             </div>
             <Target className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white" />
           </div>
@@ -756,7 +998,9 @@ export default function WorkerDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Tasks</p>
-              <p className="text-lg md:text-2xl font-bold text-black dark:text-white">8/10</p>
+              <p className="text-lg md:text-2xl font-bold text-black dark:text-white">
+                {dashboardMetrics.completedTasks}/{dashboardMetrics.totalTasks}
+              </p>
             </div>
             <CheckSquare className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white" />
           </div>
@@ -766,7 +1010,9 @@ export default function WorkerDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Tasks Due</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-600 dark:text-gray-400">3</p>
+              <p className="text-lg md:text-2xl font-bold text-gray-600 dark:text-gray-400">
+                {dashboardMetrics.overdueTasks}
+              </p>
             </div>
             <Clock className="h-6 w-6 md:h-8 md:w-8 text-gray-600 dark:text-gray-400" />
           </div>
@@ -776,7 +1022,9 @@ export default function WorkerDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Performance Trend</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-700 dark:text-gray-300">+12%</p>
+              <p className="text-lg md:text-2xl font-bold text-gray-700 dark:text-gray-300">
+                +{dashboardMetrics.performanceTrend}%
+              </p>
             </div>
             <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-gray-700 dark:text-gray-300" />
           </div>
