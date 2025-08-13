@@ -4,11 +4,9 @@ import { Layout } from '@/components/Layout';
 import WorkerDashboard from '@/components/dashboards/WorkerDashboard';
 import ManagerDashboard from '@/components/dashboards/ManagerDashboard';
 import MDDashboard from '@/components/dashboards/MDDashboard';
+import HRDashboard from '@/components/dashboards/HRDashboard';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-
-// Import the HRDashboard with the correct filename (it has a typo in the filename)
-import HRDashboard from '@/components/dashboards/HRDahboard';
 
 export default function DashboardPage() {
   const { isLoggedIn, userRole, onRoleChange } = useAuth();
@@ -57,4 +55,3 @@ export default function DashboardPage() {
     </Layout>
   );
 }
-

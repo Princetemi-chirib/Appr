@@ -7,18 +7,55 @@ import {
   Bell, 
   Shield, 
   Palette, 
-  Globe, 
-  Clock, 
-  Mail, 
-  Save,
-  Eye,
-  EyeOff,
-  Camera,
-  Trash2,
   Download,
   Upload,
-  RefreshCw
+  Save,
+  X,
+  Check,
+  AlertTriangle,
+  Info,
+  Lock,
+  Key,
+  Smartphone,
+  Mail,
+  Globe,
+  Database,
+  Server,
+  Activity,
+  Settings as SettingsIcon,
+  ChevronDown,
+  ChevronUp,
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  EyeOff,
+  Copy,
+  RefreshCw,
+  FileText,
+  Calendar,
+  Clock,
+  Users,
+  Building,
+  Target,
+  TrendingUp,
+  BarChart3,
+  PieChart,
+  LineChart,
+  MapPin,
+  Phone,
+  Link,
+  ExternalLink,
+  HelpCircle,
+  BookOpen,
+  MessageCircle,
+  Zap,
+  Moon,
+  Sun,
+  Monitor,
+  Camera
 } from 'lucide-react';
+import { exportAllReports } from '../../../lib/pdf-export';
 
 export default function SettingsPage() {
   const { userRole, onRoleChange } = useAuth();
@@ -99,19 +136,32 @@ export default function SettingsPage() {
   };
 
   const handleExportData = () => {
-    const data = {
-      profile: profileSettings,
-      notifications: notificationSettings,
-      privacy: privacySettings,
-      appearance: appearanceSettings,
-      security: securitySettings
+    // Export all system data as PDF
+    const mockData = {
+      employees: [
+        {
+          id: 1,
+          name: 'Alice Johnson',
+          email: 'alice@company.com',
+          team: 'Engineering',
+          position: 'Senior Developer',
+          appraisalStatus: 'Finalized',
+          performance: 'Exceeds Expectations',
+          lastReview: '2024-01-15',
+          manager: 'John Smith',
+          hireDate: '2022-03-15',
+          salary: '85000'
+        }
+      ],
+      tasks: [],
+      performance: [
+        { period: 'Q4 2023', rating: 'Exceeds Expectations', score: 4.2, feedback: 'Excellent work on the new feature implementation' }
+      ],
+      objectives: [],
+      appraisals: []
     };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'settings-backup.json';
-    a.click();
+
+    exportAllReports(mockData);
   };
 
   const renderProfileSettings = () => (

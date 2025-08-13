@@ -31,8 +31,44 @@ import {
   Mail,
   Phone,
   MapPin,
-  Building
+  Building,
+  Save,
+  SaveAll,
+  AlertCircle,
+  Info,
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
+  Hash,
+  Percent
 } from 'lucide-react';
+import { 
+  mockPerspectives, 
+  mockAppraisalPeriods, 
+  mockUsers, 
+  mockUserObjectives,
+  mockSelfAppraisals,
+  mockPerformanceAppraisals,
+  mockNotifications,
+  getCurrentPeriod,
+  getDirectReports,
+  getObjectiveById,
+  getPerspectiveByObjectiveId
+} from '../../lib/mock-data';
+import {
+  exportEmployeeList,
+  exportTaskReport,
+  exportPerformanceSummary,
+  exportCompanyObjectives,
+  exportAnalyticsReport,
+  exportRecognitionReport,
+  exportAllReports,
+  type EmployeeData,
+  type TaskData,
+  type PerformanceData,
+  type ObjectiveData,
+  type AppraisalData
+} from '../../lib/pdf-export';
 
 // Enhanced mock data
 const mockEmployees = [
@@ -131,6 +167,206 @@ const mockTasks = [
 const taskCategories = ['Performance Review', 'Training', 'Documentation', 'Compensation', 'Recruitment', 'Compliance', 'General'];
 const taskPriorities = ['Low', 'Medium', 'High', 'Urgent'];
 const taskStatuses = ['Not Started', 'In Progress', 'Under Review', 'Completed', 'On Hold'];
+
+// Company Objectives & Perspective Management Components
+const PerspectiveForm = ({ 
+  perspective, 
+  onSave, 
+  onCancel 
+}: {
+  perspective?: any;
+  onSave: (data: any) => void;
+  onCancel: () => void;
+}) => {
+  const [formData, setFormData] = useState({
+    name: perspective?.name || '',
+    description: perspective?.description || ''
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">
+          {perspective ? 'Edit Perspective' : 'Add New Perspective'}
+        </h3>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="text-gray-500 hover:text-gray-700"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Perspective Name *
+          </label>
+          <input
+            type="text"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            placeholder="e.g., Financial, Customer, Internal Process"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Description *
+          </label>
+          <textarea
+            required
+            rows={3}
+            value={formData.description}
+            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            placeholder="Describe the perspective and its focus areas"
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-end space-x-3">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+        >
+          {perspective ? 'Update Perspective' : 'Add Perspective'}
+        </button>
+      </div>
+    </form>
+  );
+};
+
+const ObjectiveForm = ({ 
+  objective, 
+  perspectiveId, 
+  onSave, 
+  onCancel 
+}: {
+  objective?: any;
+  perspectiveId: number;
+  onSave: (data: any) => void;
+  onCancel: () => void;
+}) => {
+  const [formData, setFormData] = useState({
+    name: objective?.name || '',
+    description: objective?.description || '',
+    defaultWeight: objective?.defaultWeight || 25,
+    isActive: objective?.isActive ?? true
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave({ ...formData, perspectiveId });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">
+          {objective ? 'Edit Objective' : 'Add New Objective'}
+        </h3>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="text-gray-500 hover:text-gray-700"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Objective Name *
+          </label>
+          <input
+            type="text"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            placeholder="Enter objective name"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Description *
+          </label>
+          <textarea
+            required
+            rows={3}
+            value={formData.description}
+            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            placeholder="Describe the objective and expected outcomes"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Default Weight (%) *
+          </label>
+          <input
+            type="number"
+            required
+            min="1"
+            max="100"
+            value={formData.defaultWeight}
+            onChange={(e) => setFormData(prev => ({ ...prev, defaultWeight: parseInt(e.target.value) }))}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            placeholder="25"
+          />
+        </div>
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="isActive"
+            checked={formData.isActive}
+            onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+            className="h-4 w-4 text-black dark:text-white border-gray-300 dark:border-gray-600 rounded focus:ring-black dark:focus:ring-white"
+          />
+          <label htmlFor="isActive" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+            Active Objective
+          </label>
+        </div>
+      </div>
+
+      <div className="flex justify-end space-x-3">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+        >
+          {objective ? 'Update Objective' : 'Add Objective'}
+        </button>
+      </div>
+    </form>
+  );
+};
 
 // TaskForm Component
 const TaskForm = ({ 
@@ -603,6 +839,15 @@ export default function HRDashboard() {
   const [employeeFilterPosition, setEmployeeFilterPosition] = useState('all');
   const [employeeFilterManager, setEmployeeFilterManager] = useState('all');
 
+  // Company Objectives & Perspective Management state
+  const [showPerspectiveForm, setShowPerspectiveForm] = useState(false);
+  const [showObjectiveForm, setShowObjectiveForm] = useState(false);
+  const [selectedPerspective, setSelectedPerspective] = useState<any>(null);
+  const [selectedObjective, setSelectedObjective] = useState<any>(null);
+  const [selectedPerspectiveForObjective, setSelectedPerspectiveForObjective] = useState<number | null>(null);
+  const [expandedPerspectives, setExpandedPerspectives] = useState<number[]>([]);
+  const [perspectives, setPerspectives] = useState(mockPerspectives);
+
   const handleStatusChange = (employeeId: number, newStatus: string) => {
     setEmployees(prevEmployees =>
       prevEmployees.map(employee =>
@@ -672,6 +917,106 @@ export default function HRDashboard() {
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
+  };
+
+  // Company Objectives & Perspective Management functions
+  const handleAddPerspective = () => {
+    setSelectedPerspective(null);
+    setShowPerspectiveForm(true);
+  };
+
+  const handleEditPerspective = (perspective: any) => {
+    setSelectedPerspective(perspective);
+    setShowPerspectiveForm(true);
+  };
+
+  const handleSavePerspective = (data: any) => {
+    if (selectedPerspective) {
+      // Edit existing perspective
+      setPerspectives(prev => prev.map(p => 
+        p.id === selectedPerspective.id 
+          ? { ...p, ...data }
+          : p
+      ));
+    } else {
+      // Add new perspective
+      const newPerspective = {
+        id: Math.max(...perspectives.map(p => p.id)) + 1,
+        ...data,
+        objectives: []
+      };
+      setPerspectives(prev => [...prev, newPerspective]);
+    }
+    setShowPerspectiveForm(false);
+    setSelectedPerspective(null);
+  };
+
+  const handleDeletePerspective = (perspectiveId: number) => {
+    if (confirm('Are you sure you want to delete this perspective? This will also delete all associated objectives.')) {
+      setPerspectives(prev => prev.filter(p => p.id !== perspectiveId));
+    }
+  };
+
+  const handleAddObjective = (perspectiveId: number) => {
+    setSelectedObjective(null);
+    setSelectedPerspectiveForObjective(perspectiveId);
+    setShowObjectiveForm(true);
+  };
+
+  const handleEditObjective = (objective: any, perspectiveId: number) => {
+    setSelectedObjective(objective);
+    setSelectedPerspectiveForObjective(perspectiveId);
+    setShowObjectiveForm(true);
+  };
+
+  const handleSaveObjective = (data: any) => {
+    if (selectedObjective) {
+      // Edit existing objective
+      setPerspectives(prev => prev.map(p => 
+        p.id === selectedPerspectiveForObjective
+          ? {
+              ...p,
+              objectives: p.objectives.map(obj => 
+                obj.id === selectedObjective.id 
+                  ? { ...obj, ...data }
+                  : obj
+              )
+            }
+          : p
+      ));
+    } else {
+      // Add new objective
+      const newObjective = {
+        id: Math.max(...perspectives.flatMap(p => p.objectives).map(obj => obj.id)) + 1,
+        ...data
+      };
+      setPerspectives(prev => prev.map(p => 
+        p.id === selectedPerspectiveForObjective
+          ? { ...p, objectives: [...p.objectives, newObjective] }
+          : p
+      ));
+    }
+    setShowObjectiveForm(false);
+    setSelectedObjective(null);
+    setSelectedPerspectiveForObjective(null);
+  };
+
+  const handleDeleteObjective = (objectiveId: number, perspectiveId: number) => {
+    if (confirm('Are you sure you want to delete this objective?')) {
+      setPerspectives(prev => prev.map(p => 
+        p.id === perspectiveId
+          ? { ...p, objectives: p.objectives.filter(obj => obj.id !== objectiveId) }
+          : p
+      ));
+    }
+  };
+
+  const togglePerspectiveExpansion = (perspectiveId: number) => {
+    setExpandedPerspectives(prev => 
+      prev.includes(perspectiveId)
+        ? prev.filter(id => id !== perspectiveId)
+        : [...prev, perspectiveId]
+    );
   };
 
   const handleCreateTask = () => {
@@ -761,6 +1106,186 @@ export default function HRDashboard() {
       setEmployees(prevEmployees => [...prevEmployees, newEmployee]);
     }
     setShowEmployeeModal(false);
+  };
+
+  // PDF Export Functions
+  const handleExportEmployeeList = () => {
+    const employeeData: EmployeeData[] = employees.map(emp => ({
+      id: emp.id,
+      name: emp.name,
+      email: emp.email,
+      team: emp.team,
+      position: emp.position,
+      appraisalStatus: emp.appraisalStatus,
+      performance: emp.performance,
+      lastReview: emp.lastReview,
+      manager: emp.manager,
+      hireDate: emp.hireDate,
+      salary: emp.salary
+    }));
+
+    const filters = {
+      team: selectedTeam !== 'all' ? selectedTeam : undefined,
+      status: selectedStatus !== 'all' ? selectedStatus : undefined
+    };
+
+    exportEmployeeList(employeeData, filters);
+  };
+
+  const handleExportTaskReport = () => {
+    const taskData: TaskData[] = tasks.map(task => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      assignedTo: task.assignedTo,
+      team: task.team,
+      priority: task.priority,
+      status: task.status,
+      dueDate: task.dueDate,
+      progress: task.progress
+    }));
+
+    const filters = {
+      team: taskFilterTeam !== 'all' ? taskFilterTeam : undefined,
+      status: taskFilterStatus !== 'all' ? taskFilterStatus : undefined,
+      priority: taskFilterPriority !== 'all' ? taskFilterPriority : undefined
+    };
+
+    exportTaskReport(taskData, filters);
+  };
+
+  const handleExportPerformanceSummary = () => {
+    const employeeData: EmployeeData[] = employees.map(emp => ({
+      id: emp.id,
+      name: emp.name,
+      email: emp.email,
+      team: emp.team,
+      position: emp.position,
+      appraisalStatus: emp.appraisalStatus,
+      performance: emp.performance,
+      lastReview: emp.lastReview,
+      manager: emp.manager,
+      hireDate: emp.hireDate,
+      salary: emp.salary
+    }));
+
+    const performanceData: PerformanceData[] = [
+      { period: 'Q4 2023', rating: 'Exceeds Expectations', score: 4.2, feedback: 'Excellent work on the new feature implementation' },
+      { period: 'Q3 2023', rating: 'Meets Expectations', score: 3.8, feedback: 'Good progress on assigned tasks' },
+      { period: 'Q2 2023', rating: 'Exceeds Expectations', score: 4.1, feedback: 'Outstanding collaboration and innovation' }
+    ];
+
+    exportPerformanceSummary(employeeData, performanceData);
+  };
+
+  const handleExportCompanyObjectives = () => {
+    const objectiveData: ObjectiveData[] = perspectives.flatMap(perspective => 
+      perspective.objectives.map(obj => ({
+        id: obj.id,
+        name: obj.name,
+        description: obj.description,
+        perspective: perspective.name,
+        defaultWeight: obj.defaultWeight,
+        isActive: obj.isActive
+      }))
+    );
+
+    exportCompanyObjectives(objectiveData);
+  };
+
+  const handleExportAnalyticsReport = () => {
+    const analyticsData = {
+      totalEmployees: employees.length,
+      completedAppraisals: employees.filter(e => e.appraisalStatus === 'Finalized').length,
+      completionRate: Math.round((employees.filter(e => e.appraisalStatus === 'Finalized').length / employees.length) * 100),
+      averageScore: 3.8,
+      performanceDistribution: {
+        'Exceeds Expectations': employees.filter(e => e.performance === 'Exceeds Expectations').length,
+        'Meets Expectations': employees.filter(e => e.performance === 'Meets Expectations').length,
+        'Below Expectations': employees.filter(e => e.performance === 'Below Expectations').length
+      }
+    };
+
+    exportAnalyticsReport(analyticsData);
+  };
+
+  const handleExportRecognitionReport = () => {
+    const employeeData: EmployeeData[] = employees.map(emp => ({
+      id: emp.id,
+      name: emp.name,
+      email: emp.email,
+      team: emp.team,
+      position: emp.position,
+      appraisalStatus: emp.appraisalStatus,
+      performance: emp.performance,
+      lastReview: emp.lastReview,
+      manager: emp.manager,
+      hireDate: emp.hireDate,
+      salary: emp.salary
+    }));
+
+    exportRecognitionReport(employeeData);
+  };
+
+  const handleExportAllReports = () => {
+    const employeeData: EmployeeData[] = employees.map(emp => ({
+      id: emp.id,
+      name: emp.name,
+      email: emp.email,
+      team: emp.team,
+      position: emp.position,
+      appraisalStatus: emp.appraisalStatus,
+      performance: emp.performance,
+      lastReview: emp.lastReview,
+      manager: emp.manager,
+      hireDate: emp.hireDate,
+      salary: emp.salary
+    }));
+
+    const taskData: TaskData[] = tasks.map(task => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      assignedTo: task.assignedTo,
+      team: task.team,
+      priority: task.priority,
+      status: task.status,
+      dueDate: task.dueDate,
+      progress: task.progress
+    }));
+
+    const performanceData: PerformanceData[] = [
+      { period: 'Q4 2023', rating: 'Exceeds Expectations', score: 4.2, feedback: 'Excellent work on the new feature implementation' },
+      { period: 'Q3 2023', rating: 'Meets Expectations', score: 3.8, feedback: 'Good progress on assigned tasks' },
+      { period: 'Q2 2023', rating: 'Exceeds Expectations', score: 4.1, feedback: 'Outstanding collaboration and innovation' }
+    ];
+
+    const objectiveData: ObjectiveData[] = perspectives.flatMap(perspective => 
+      perspective.objectives.map(obj => ({
+        id: obj.id,
+        name: obj.name,
+        description: obj.description,
+        perspective: perspective.name,
+        defaultWeight: obj.defaultWeight,
+        isActive: obj.isActive
+      }))
+    );
+
+    const appraisalData: AppraisalData[] = mockUserObjectives.map(uo => ({
+      userId: uo.userId,
+      periodId: uo.periodId,
+      objectives: uo.objectives,
+      status: uo.status,
+      submittedAt: uo.submittedAt
+    }));
+
+    exportAllReports({
+      employees: employeeData,
+      tasks: taskData,
+      performance: performanceData,
+      objectives: objectiveData,
+      appraisals: appraisalData
+    });
   };
 
   const filteredEmployees = employees.filter(employee => {
@@ -857,9 +1382,12 @@ export default function HRDashboard() {
             <CheckSquare className="h-5 w-5 text-indigo-600" />
             <span>Assign New Task</span>
           </button>
-          <button className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <Download className="h-5 w-5 text-indigo-600" />
-            <span>Export Reports</span>
+          <button 
+            onClick={handleExportAllReports}
+            className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            <Download className="h-4 w-4" />
+            <span>Export All</span>
           </button>
         </div>
       </div>
@@ -1129,15 +1657,24 @@ export default function HRDashboard() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <button 
+            onClick={handleExportPerformanceSummary}
+            className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             <FileText className="h-5 w-5 text-indigo-600" />
             <span>Performance Summary</span>
           </button>
-          <button className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <button 
+            onClick={handleExportAnalyticsReport}
+            className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             <BarChart3 className="h-5 w-5 text-indigo-600" />
             <span>Analytics Report</span>
           </button>
-          <button className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <button 
+            onClick={handleExportRecognitionReport}
+            className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             <Award className="h-5 w-5 text-indigo-600" />
             <span>Recognition Report</span>
           </button>
@@ -1184,6 +1721,174 @@ export default function HRDashboard() {
           </div>
         </div>
       </div>
+    </div>
+  );
+
+  const renderCompanyObjectives = () => (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-xl font-semibold">Company Objectives & Perspectives</h3>
+            <p className="text-gray-600 dark:text-gray-400">Manage strategic perspectives and their associated objectives</p>
+          </div>
+          <button 
+            onClick={handleAddPerspective}
+            className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Add Perspective</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Perspectives List */}
+      <div className="space-y-4">
+        {perspectives.map(perspective => (
+          <div key={perspective.id} className="bg-white dark:bg-gray-800 rounded-xl shadow">
+            {/* Perspective Header */}
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={() => togglePerspectiveExpansion(perspective.id)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      {expandedPerspectives.includes(perspective.id) ? (
+                        <ChevronUp className="h-5 w-5" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5" />
+                      )}
+                    </button>
+                    <div>
+                      <h4 className="text-lg font-semibold">{perspective.name}</h4>
+                      <p className="text-gray-600 dark:text-gray-400">{perspective.description}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    {perspective.objectives.length} objectives
+                  </span>
+                  <button
+                    onClick={() => handleEditPerspective(perspective)}
+                    className="text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDeletePerspective(perspective.id)}
+                    className="text-gray-500 hover:text-red-600"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Objectives List */}
+            {expandedPerspectives.includes(perspective.id) && (
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h5 className="font-medium">Objectives</h5>
+                  <button
+                    onClick={() => handleAddObjective(perspective.id)}
+                    className="flex items-center space-x-1 text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400 text-sm"
+                  >
+                    <Plus className="h-3 w-3" />
+                    <span>Add Objective</span>
+                  </button>
+                </div>
+                
+                <div className="space-y-3">
+                  {perspective.objectives.map(objective => (
+                    <div key={objective.id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <h6 className="font-medium">{objective.name}</h6>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              objective.isActive 
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' 
+                                : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                            }`}>
+                              {objective.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                            {objective.description}
+                          </p>
+                          <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                            <span className="flex items-center space-x-1">
+                              <Percent className="h-3 w-3" />
+                              <span>Default Weight: {objective.defaultWeight}%</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleEditObjective(objective, perspective.id)}
+                            className="text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteObjective(objective.id, perspective.id)}
+                            className="text-gray-500 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {perspective.objectives.length === 0 && (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                      <Target className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                      <p>No objectives defined for this perspective</p>
+                      <button
+                        onClick={() => handleAddObjective(perspective.id)}
+                        className="mt-2 text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400 text-sm"
+                      >
+                        Add your first objective
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Modals */}
+      {showPerspectiveForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <PerspectiveForm
+              perspective={selectedPerspective}
+              onSave={handleSavePerspective}
+              onCancel={() => setShowPerspectiveForm(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {showObjectiveForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <ObjectiveForm
+              objective={selectedObjective}
+              perspectiveId={selectedPerspectiveForObjective!}
+              onSave={handleSaveObjective}
+              onCancel={() => setShowObjectiveForm(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -1242,13 +1947,22 @@ export default function HRDashboard() {
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center">
             <h3 className="text-xl font-semibold">Task Management</h3>
-            <button 
-              onClick={handleCreateTask}
-              className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Assign New Task</span>
-            </button>
+            <div className="flex space-x-3">
+              <button 
+                onClick={handleExportTaskReport}
+                className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <Download className="h-4 w-4" />
+                <span>Export Tasks</span>
+              </button>
+              <button 
+                onClick={handleCreateTask}
+                className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Assign New Task</span>
+              </button>
+            </div>
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -1366,13 +2080,22 @@ export default function HRDashboard() {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Employee Management</h3>
-          <button 
-            onClick={handleCreateEmployee}
-            className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Add Employee</span>
-          </button>
+          <div className="flex space-x-3">
+            <button 
+              onClick={handleExportEmployeeList}
+              className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              <Download className="h-4 w-4" />
+              <span>Export Employees</span>
+            </button>
+            <button 
+              onClick={handleCreateEmployee}
+              className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Add Employee</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1564,6 +2287,7 @@ export default function HRDashboard() {
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'employees', label: 'Employees', icon: Users },
+              { id: 'objectives', label: 'Company Objectives', icon: Target },
               { id: 'cycles', label: 'Appraisal Cycles', icon: Calendar },
               { id: 'reports', label: 'Reports', icon: FileText },
               { id: 'settings', label: 'Settings', icon: Settings },
@@ -1593,6 +2317,7 @@ export default function HRDashboard() {
       <div className="min-h-96">
         {selectedTab === 'overview' && renderOverview()}
         {selectedTab === 'employees' && renderEmployees()}
+        {selectedTab === 'objectives' && renderCompanyObjectives()}
         {selectedTab === 'cycles' && renderAppraisalCycles()}
         {selectedTab === 'reports' && renderReports()}
         {selectedTab === 'settings' && renderSettings()}

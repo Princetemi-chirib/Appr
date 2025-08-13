@@ -2,29 +2,42 @@
 import { useState } from 'react';
 import { 
   BarChart3, 
-  TrendingUp, 
   Users, 
-  Building, 
-  Award, 
+  TrendingUp, 
   Target, 
-  Calendar, 
-  FileText, 
-  Download, 
-  Eye,
-  Plus,
+  CheckCircle, 
+  Clock, 
+  AlertTriangle,
+  Download,
+  FileText,
+  Award,
+  Star,
+  Calendar,
+  DollarSign,
+  Building,
+  UserCheck,
   Settings,
   Bell,
   MessageSquare,
-  Star,
-  CheckCircle,
-  AlertTriangle,
-  Clock,
-  DollarSign,
-  PieChart,
+  Plus,
+  Edit,
+  Eye,
+  Trash2,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Save,
+  Send,
   Activity,
   Filter,
   Search
 } from 'lucide-react';
+import {
+  exportAnalyticsReport,
+  exportAllReports,
+  type EmployeeData,
+  type PerformanceData
+} from '../../lib/pdf-export';
 
 // Enhanced mock data for MD dashboard
 const mockCompanyMetrics = {
@@ -168,10 +181,72 @@ export default function MDDashboard() {
     ? mockDepartments 
     : mockDepartments.filter(dept => dept.name === selectedDepartment);
 
+  const handleExportAllReports = () => {
+    // Convert mock data to proper format for PDF export
+    const employeeData: EmployeeData[] = [
+      {
+        id: 1,
+        name: 'Alice Johnson',
+        email: 'alice@company.com',
+        team: 'Engineering',
+        position: 'Senior Developer',
+        appraisalStatus: 'Finalized',
+        performance: 'Exceeds Expectations',
+        lastReview: '2024-01-15',
+        manager: 'John Smith',
+        hireDate: '2022-03-15',
+        salary: '85000'
+      },
+      {
+        id: 2,
+        name: 'Bob Smith',
+        email: 'bob@company.com',
+        team: 'Marketing',
+        position: 'Marketing Manager',
+        appraisalStatus: 'Finalized',
+        performance: 'Meets Expectations',
+        lastReview: '2024-01-10',
+        manager: 'Sarah Wilson',
+        hireDate: '2021-06-20',
+        salary: '75000'
+      }
+    ];
+
+    const performanceData: PerformanceData[] = [
+      { period: 'Q4 2023', rating: 'Exceeds Expectations', score: 4.2, feedback: 'Excellent work on the new feature implementation' },
+      { period: 'Q3 2023', rating: 'Meets Expectations', score: 3.8, feedback: 'Good progress on assigned tasks' },
+      { period: 'Q2 2023', rating: 'Exceeds Expectations', score: 4.1, feedback: 'Outstanding collaboration and innovation' }
+    ];
+
+    exportAllReports({
+      employees: employeeData,
+      tasks: [],
+      performance: performanceData,
+      objectives: [],
+      appraisals: []
+    });
+  };
+
+  const handleExportAnalyticsReport = () => {
+    const analyticsData = {
+      totalEmployees: 150,
+      completedAppraisals: 120,
+      completionRate: 80,
+      averageScore: 3.8,
+      performanceDistribution: {
+        'Exceeds Expectations': 25,
+        'Meets Expectations': 60,
+        'Below Expectations': 15
+      }
+    };
+
+    exportAnalyticsReport(analyticsData);
+  };
+
   const renderOverview = () => (
     <div className="space-y-6">
       {/* Executive Summary */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl shadow p-6 text-white">
+      <div className="bg-black rounded-xl shadow p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-2">Executive Dashboard</h2>
@@ -231,7 +306,7 @@ export default function MDDashboard() {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold">Strategic Goals</h3>
-          <button className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+          <button className="flex items-center space-x-2 bg-black text-white px-4 py-2 rounded-lg hover:bg-black text-black transition-colors">
             <Plus className="h-4 w-4" />
             <span>Add Goal</span>
           </button>
@@ -519,22 +594,34 @@ export default function MDDashboard() {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
         <div className="flex justify-between items-center mb-4">
           <h4 className="font-semibold">Executive Reports</h4>
-          <button className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+          <button 
+            onClick={handleExportAllReports}
+            className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
             <Download className="h-4 w-4" />
             <span>Export All</span>
           </button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <button 
+            onClick={handleExportAnalyticsReport}
+            className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             <BarChart3 className="h-5 w-5 text-indigo-600" />
             <span>Performance Report</span>
           </button>
-          <button className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <button 
+            onClick={handleExportAnalyticsReport}
+            className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             <DollarSign className="h-5 w-5 text-indigo-600" />
             <span>Financial Report</span>
           </button>
-          <button className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <button 
+            onClick={handleExportAnalyticsReport}
+            className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             <TrendingUp className="h-5 w-5 text-indigo-600" />
             <span>Strategic Analysis</span>
           </button>

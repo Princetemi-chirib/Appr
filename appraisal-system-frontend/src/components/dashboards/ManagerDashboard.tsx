@@ -14,6 +14,7 @@ interface TeamMember {
   completedGoals: number;
   tasks: number;
   completedTasks: number;
+  appraisalStatus: string;
 }
 import { 
   Users, 
@@ -40,6 +41,21 @@ import {
   Search,
   X
 } from 'lucide-react';
+import { 
+  mockNotifications,
+  mockUserObjectives,
+  mockSelfAppraisals,
+  mockPerformanceAppraisals,
+  getCurrentPeriod,
+  getObjectiveById
+} from '../../lib/mock-data';
+import {
+  exportPerformanceSummary,
+  exportAnalyticsReport,
+  exportAllReports,
+  type EmployeeData,
+  type PerformanceData
+} from '../../lib/pdf-export';
 
 // Enhanced mock data for manager dashboard
 const mockTeamMembers = [
@@ -55,7 +71,8 @@ const mockTeamMembers = [
     goals: 3,
     completedGoals: 2,
     tasks: 8,
-    completedTasks: 7
+    completedTasks: 7,
+    appraisalStatus: 'Finalized'
   },
   { 
     id: 2, 
@@ -69,7 +86,8 @@ const mockTeamMembers = [
     goals: 4,
     completedGoals: 3,
     tasks: 6,
-    completedTasks: 4
+    completedTasks: 4,
+    appraisalStatus: 'In Progress'
   },
   { 
     id: 3, 
@@ -83,7 +101,8 @@ const mockTeamMembers = [
     goals: 3,
     completedGoals: 1,
     tasks: 5,
-    completedTasks: 2
+    completedTasks: 2,
+    appraisalStatus: 'Not Started'
   },
   { 
     id: 4, 
@@ -97,7 +116,8 @@ const mockTeamMembers = [
     goals: 5,
     completedGoals: 5,
     tasks: 10,
-    completedTasks: 9
+    completedTasks: 9,
+    appraisalStatus: 'Finalized'
   },
 ];
 
@@ -153,7 +173,8 @@ export default function ManagerDashboard() {
     goals: 0,
     completedGoals: 0,
     tasks: 0,
-    completedTasks: 0
+    completedTasks: 0,
+    appraisalStatus: 'Not Started'
   });
   
   // Notifications data
@@ -220,7 +241,8 @@ export default function ManagerDashboard() {
       goals: 0,
       completedGoals: 0,
       tasks: 0,
-      completedTasks: 0
+      completedTasks: 0,
+      appraisalStatus: 'Not Started'
     });
   };
 
@@ -260,7 +282,7 @@ export default function ManagerDashboard() {
   const handleEditMember = (member: TeamMember) => {
     setSelectedMember(member);
     const { id, lastUpdated, ...memberWithoutIdAndDate } = member;
-    setNewMember(memberWithoutIdAndDate);
+    setNewMember(memberWithoutIdAndDate as Omit<TeamMember, 'id' | 'lastUpdated'>);
     setShowEditMemberModal(true);
   };
 
@@ -320,15 +342,58 @@ export default function ManagerDashboard() {
   };
 
   const handleExportReport = (reportType: string) => {
-    // Simulate export functionality
-    const data = {
-      performance: teamMembers.map(m => ({ name: m.name, performance: m.performance, rating: m.rating })),
-      goals: teamGoals,
-      trends: mockTeamMetrics
-    };
+    // Convert team members to EmployeeData format
+    const employeeData: EmployeeData[] = teamMembers.map(member => ({
+      id: member.id,
+      name: member.name,
+      email: `${member.name.toLowerCase().replace(' ', '.')}@company.com`,
+      team: 'Engineering', // Default team
+      position: 'Developer', // Default position
+      appraisalStatus: member.appraisalStatus,
+      performance: member.performance,
+      lastReview: '2024-01-15', // Default date
+      manager: 'Manager Name',
+      hireDate: '2023-01-01', // Default date
+      salary: '65000' // Default salary
+    }));
+
+    const performanceData: PerformanceData[] = [
+      { period: 'Q4 2023', rating: 'Exceeds Expectations', score: 4.2, feedback: 'Excellent work on the new feature implementation' },
+      { period: 'Q3 2023', rating: 'Meets Expectations', score: 3.8, feedback: 'Good progress on assigned tasks' },
+      { period: 'Q2 2023', rating: 'Exceeds Expectations', score: 4.1, feedback: 'Outstanding collaboration and innovation' }
+    ];
+
+    switch (reportType) {
+      case 'Performance Report':
+        exportPerformanceSummary(employeeData, performanceData);
+        break;
+      case 'Analytics Report':
+        const analyticsData = {
+          totalEmployees: teamMembers.length,
+          completedAppraisals: teamMembers.filter(m => m.appraisalStatus === 'Finalized').length,
+          completionRate: Math.round((teamMembers.filter(m => m.appraisalStatus === 'Finalized').length / teamMembers.length) * 100),
+          averageScore: mockTeamMetrics.averageRating,
+          performanceDistribution: {
+            'Exceeds Expectations': teamMembers.filter(m => m.performance === 'Exceeds Expectations').length,
+            'Meets Expectations': teamMembers.filter(m => m.performance === 'Meets Expectations').length,
+            'Below Expectations': teamMembers.filter(m => m.performance === 'Below Expectations').length
+          }
+        };
+        exportAnalyticsReport(analyticsData);
+        break;
+      case 'All Reports':
+        exportAllReports({
+          employees: employeeData,
+          tasks: [],
+          performance: performanceData,
+          objectives: [],
+          appraisals: []
+        });
+        break;
+      default:
+        console.log(`Exporting ${reportType} report`);
+    }
     
-    console.log(`Exporting ${reportType} report:`, data);
-    alert(`${reportType} report exported successfully!`);
     addActivity(`Exported ${reportType} report`);
   };
 
