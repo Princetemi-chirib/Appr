@@ -259,6 +259,42 @@ export default function WorkerDashboard() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [currentSection, setCurrentSection] = useState<string | null>(null);
   
+  // Modal states for forms
+  const [showAddGoalModal, setShowAddGoalModal] = useState(false);
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+  const [showUpdateSkillsModal, setShowUpdateSkillsModal] = useState(false);
+  const [showContactManagerModal, setShowContactManagerModal] = useState(false);
+  const [showAllNotifications, setShowAllNotifications] = useState(false);
+  
+  // Form states
+  const [newGoal, setNewGoal] = useState({
+    title: '',
+    category: 'Learning',
+    description: '',
+    target: 100,
+    dueDate: '',
+    milestones: ['']
+  });
+  
+  const [newTask, setNewTask] = useState({
+    title: '',
+    description: '',
+    priority: 'Medium',
+    category: 'Project',
+    dueDate: '',
+    estimatedHours: 4
+  });
+  
+  const [contactMessage, setContactMessage] = useState({
+    subject: '',
+    message: ''
+  });
+  
+  const [skillsFormData, setSkillsFormData] = useState({
+    technical: mockSkills.technical.map(skill => ({ ...skill })),
+    soft: mockSkills.soft.map(skill => ({ ...skill }))
+  });
+  
   // Enhanced data state with real-time updates
   const [goals, setGoals] = useState(mockGoals);
   const [tasks, setTasks] = useState(mockTasks);
@@ -879,6 +915,110 @@ export default function WorkerDashboard() {
     }));
   };
 
+  // Form handling functions
+  const handleAddGoal = () => {
+    if (!newGoal.title || !newGoal.description || !newGoal.dueDate) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
+    const goal = {
+      id: Math.max(...goals.map(g => g.id)) + 1,
+      title: newGoal.title,
+      category: newGoal.category,
+      progress: 0,
+      target: newGoal.target,
+      dueDate: newGoal.dueDate,
+      status: 'Not Started',
+      description: newGoal.description,
+      milestones: newGoal.milestones.filter(m => m.trim() !== ''),
+      completedMilestones: 0
+    };
+    
+    setGoals(prev => [...prev, goal]);
+    setNewGoal({
+      title: '',
+      category: 'Learning',
+      description: '',
+      target: 100,
+      dueDate: '',
+      milestones: ['']
+    });
+    setShowAddGoalModal(false);
+  };
+
+  const handleAddTask = () => {
+    if (!newTask.title || !newTask.description || !newTask.dueDate) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
+    const task = {
+      id: Math.max(...tasks.map(t => t.id)) + 1,
+      title: newTask.title,
+      priority: newTask.priority,
+      dueDate: newTask.dueDate,
+      status: 'Not Started',
+      category: newTask.category,
+      description: newTask.description,
+      estimatedHours: newTask.estimatedHours,
+      actualHours: 0,
+      assignedBy: 'Self',
+      relatedGoal: 'Personal'
+    };
+    
+    setTasks(prev => [...prev, task]);
+    setNewTask({
+      title: '',
+      description: '',
+      priority: 'Medium',
+      category: 'Project',
+      dueDate: '',
+      estimatedHours: 4
+    });
+    setShowAddTaskModal(false);
+  };
+
+  const handleUpdateSkills = () => {
+    setSkills(skillsFormData);
+    setShowUpdateSkillsModal(false);
+    alert('Skills updated successfully!');
+  };
+
+  const handleContactManager = () => {
+    if (!contactMessage.subject || !contactMessage.message) {
+      alert('Please fill in both subject and message');
+      return;
+    }
+    
+    // In a real app, this would send to backend
+    console.log('Contact message:', contactMessage);
+    alert('Message sent to manager successfully!');
+    setContactMessage({ subject: '', message: '' });
+    setShowContactManagerModal(false);
+  };
+
+  const addMilestone = () => {
+    setNewGoal(prev => ({
+      ...prev,
+      milestones: [...prev.milestones, '']
+    }));
+  };
+
+  const removeMilestone = (index: number) => {
+    setNewGoal(prev => ({
+      ...prev,
+      milestones: prev.milestones.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateMilestone = (index: number, value: string) => {
+    setNewGoal(prev => ({
+      ...prev,
+      milestones: prev.milestones.map((milestone, i) => i === index ? value : milestone)
+    }));
+  };
+
   // Update metrics when data changes
   useEffect(() => {
     updateDashboardMetrics();
@@ -1090,14 +1230,14 @@ export default function WorkerDashboard() {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold">Recent Activity</h3>
           <button 
-            onClick={() => setShowNotifications(!showNotifications)}
+            onClick={() => setShowAllNotifications(!showAllNotifications)}
             className="text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
           >
             View All
           </button>
         </div>
         <div className="space-y-3">
-          {notifications.slice(0, 3).map(notification => (
+          {(showAllNotifications ? notifications : notifications.slice(0, 3)).map(notification => (
             <div 
               key={notification.id} 
               className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
@@ -1263,7 +1403,10 @@ export default function WorkerDashboard() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-semibold">My Goals</h3>
-        <button className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white">
+        <button 
+          onClick={() => setShowAddGoalModal(true)}
+          className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+        >
           <Plus className="h-4 w-4" />
           <span>Add Goal</span>
         </button>
@@ -1344,7 +1487,10 @@ export default function WorkerDashboard() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-semibold">My Tasks</h3>
-        <button className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white">
+        <button 
+          onClick={() => setShowAddTaskModal(true)}
+          className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+        >
           <Plus className="h-4 w-4" />
           <span>Add Task</span>
         </button>
@@ -1465,7 +1611,12 @@ export default function WorkerDashboard() {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
         <div className="flex justify-between items-center mb-4">
           <h4 className="font-semibold">Skills Assessment</h4>
-          <button className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 text-sm">Update Skills</button>
+          <button 
+            onClick={() => setShowUpdateSkillsModal(true)}
+            className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 text-sm"
+          >
+            Update Skills
+          </button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1671,7 +1822,7 @@ export default function WorkerDashboard() {
               <span className="absolute top-1 right-1 h-3 w-3 bg-black dark:bg-white rounded-full"></span>
             </button>
             <button 
-              onClick={() => alert('Contact Manager functionality - Connect with backend')}
+              onClick={() => setShowContactManagerModal(true)}
               className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
             >
               <MessageSquare className="h-4 w-4 inline mr-2" />
@@ -1721,6 +1872,408 @@ export default function WorkerDashboard() {
         {selectedTab === 'performance' && renderPerformance()}
         {showObjectiveSelection && renderObjectiveSelection()}
       </div>
+
+      {/* Add Goal Modal */}
+      {showAddGoalModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Add New Goal</h3>
+                <button 
+                  onClick={() => setShowAddGoalModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Goal Title *</label>
+                  <input
+                    type="text"
+                    value={newGoal.title}
+                    onChange={(e) => setNewGoal(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    placeholder="Enter goal title"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Category</label>
+                  <select
+                    value={newGoal.category}
+                    onChange={(e) => setNewGoal(prev => ({ ...prev, category: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  >
+                    <option value="Learning">Learning</option>
+                    <option value="Leadership">Leadership</option>
+                    <option value="Quality">Quality</option>
+                    <option value="Project">Project</option>
+                    <option value="Personal">Personal</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Description *</label>
+                  <textarea
+                    value={newGoal.description}
+                    onChange={(e) => setNewGoal(prev => ({ ...prev, description: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    rows={3}
+                    placeholder="Describe your goal"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Target Value</label>
+                    <input
+                      type="number"
+                      value={newGoal.target}
+                      onChange={(e) => setNewGoal(prev => ({ ...prev, target: parseInt(e.target.value) || 100 }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Due Date *</label>
+                    <input
+                      type="date"
+                      value={newGoal.dueDate}
+                      onChange={(e) => setNewGoal(prev => ({ ...prev, dueDate: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Milestones</label>
+                  <div className="space-y-2">
+                    {newGoal.milestones.map((milestone, index) => (
+                      <div key={index} className="flex space-x-2">
+                        <input
+                          type="text"
+                          value={milestone}
+                          onChange={(e) => updateMilestone(index, e.target.value)}
+                          className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                          placeholder={`Milestone ${index + 1}`}
+                        />
+                        <button
+                          onClick={() => removeMilestone(index)}
+                          className="px-2 py-2 text-red-600 hover:text-red-800"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      onClick={addMilestone}
+                      className="text-sm text-blue-600 hover:text-blue-800"
+                    >
+                      + Add Milestone
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowAddGoalModal(false)}
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddGoal}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+                >
+                  Add Goal
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Task Modal */}
+      {showAddTaskModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-md w-full">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Add New Task</h3>
+                <button 
+                  onClick={() => setShowAddTaskModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Task Title *</label>
+                  <input
+                    type="text"
+                    value={newTask.title}
+                    onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    placeholder="Enter task title"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Description *</label>
+                  <textarea
+                    value={newTask.description}
+                    onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    rows={3}
+                    placeholder="Describe the task"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Priority</label>
+                    <select
+                      value={newTask.priority}
+                      onChange={(e) => setNewTask(prev => ({ ...prev, priority: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    >
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Category</label>
+                    <select
+                      value={newTask.category}
+                      onChange={(e) => setNewTask(prev => ({ ...prev, category: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    >
+                      <option value="Project">Project</option>
+                      <option value="Training">Training</option>
+                      <option value="Appraisal">Appraisal</option>
+                      <option value="Collaboration">Collaboration</option>
+                      <option value="Personal">Personal</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Due Date *</label>
+                    <input
+                      type="date"
+                      value={newTask.dueDate}
+                      onChange={(e) => setNewTask(prev => ({ ...prev, dueDate: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Estimated Hours</label>
+                    <input
+                      type="number"
+                      value={newTask.estimatedHours}
+                      onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: parseInt(e.target.value) || 4 }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowAddTaskModal(false)}
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddTask}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+                >
+                  Add Task
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Update Skills Modal */}
+      {showUpdateSkillsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Update Skills Assessment</h3>
+                <button 
+                  onClick={() => setShowUpdateSkillsModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-4">Technical Skills</h4>
+                  <div className="space-y-4">
+                    {skillsFormData.technical.map((skill, index) => (
+                      <div key={skill.name} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">{skill.name}</span>
+                          <select
+                            value={skill.level}
+                            onChange={(e) => {
+                              const newSkills = { ...skillsFormData };
+                              newSkills.technical[index].level = e.target.value;
+                              newSkills.technical[index].progress = 
+                                e.target.value === 'beginner' ? 25 :
+                                e.target.value === 'intermediate' ? 50 :
+                                e.target.value === 'advanced' ? 75 : 100;
+                              setSkillsFormData(newSkills);
+                            }}
+                            className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700"
+                          >
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="expert">Expert</option>
+                          </select>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                          <div 
+                            className="bg-black dark:bg-white h-2 rounded-full transition-all duration-300" 
+                            style={{ width: `${skill.progress}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-4">Soft Skills</h4>
+                  <div className="space-y-4">
+                    {skillsFormData.soft.map((skill, index) => (
+                      <div key={skill.name} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">{skill.name}</span>
+                          <select
+                            value={skill.level}
+                            onChange={(e) => {
+                              const newSkills = { ...skillsFormData };
+                              newSkills.soft[index].level = e.target.value;
+                              newSkills.soft[index].progress = 
+                                e.target.value === 'beginner' ? 25 :
+                                e.target.value === 'intermediate' ? 50 :
+                                e.target.value === 'advanced' ? 75 : 100;
+                              setSkillsFormData(newSkills);
+                            }}
+                            className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700"
+                          >
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="expert">Expert</option>
+                          </select>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                          <div 
+                            className="bg-black dark:bg-white h-2 rounded-full transition-all duration-300" 
+                            style={{ width: `${skill.progress}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowUpdateSkillsModal(false)}
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateSkills}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+                >
+                  Update Skills
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Contact Manager Modal */}
+      {showContactManagerModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-md w-full">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Contact Manager</h3>
+                <button 
+                  onClick={() => setShowContactManagerModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Subject *</label>
+                  <input
+                    type="text"
+                    value={contactMessage.subject}
+                    onChange={(e) => setContactMessage(prev => ({ ...prev, subject: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    placeholder="Enter subject"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Message *</label>
+                  <textarea
+                    value={contactMessage.message}
+                    onChange={(e) => setContactMessage(prev => ({ ...prev, message: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    rows={5}
+                    placeholder="Enter your message"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowContactManagerModal(false)}
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleContactManager}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+                >
+                  Send Message
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
