@@ -108,7 +108,9 @@ const nextConfig = {
   },
 
   // Build output settings
-  output: 'standalone', // For containerized deployments
+  output: 'export', // For static export (GitHub Pages)
+  trailingSlash: true, // Required for GitHub Pages
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/Appr/' : '',
   
   // Disable x-powered-by header for security
   poweredByHeader: false,
