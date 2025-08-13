@@ -2287,6 +2287,16 @@ export default function WorkerDashboard() {
             padding-right: 1rem;
             max-width: 100%;
           }
+          .notification-dropdown {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 90vw !important;
+            max-width: 400px !important;
+            max-height: 70vh !important;
+            z-index: 9999 !important;
+          }
         }
       `}</style>
       {/* Header */}
@@ -2297,7 +2307,7 @@ export default function WorkerDashboard() {
             <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">Track your performance, goals, and progress</p>
           </div>
           <div className="flex items-center justify-between md:justify-end space-x-2 md:space-x-4">
-            <div className="relative">
+            <div className="relative z-50">
               <button 
                 className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={() => setShowNotifications(!showNotifications)}
@@ -2312,7 +2322,10 @@ export default function WorkerDashboard() {
               
               {/* Notification Dropdown */}
               {showNotifications && (
-                <div className="notification-dropdown absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-96 overflow-y-auto">
+                <>
+                  {/* Mobile backdrop */}
+                  <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-[9998]" onClick={() => setShowNotifications(false)}></div>
+                  <div className="notification-dropdown absolute right-0 md:right-0 left-0 md:left-auto mt-2 w-full md:w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-[9999] max-h-96 overflow-y-auto">
                   <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <div className="flex justify-between items-center">
                       <h3 className="font-semibold text-sm">Notifications</h3>
@@ -2363,6 +2376,7 @@ export default function WorkerDashboard() {
                     )}
                   </div>
                 </div>
+                </>
               )}
             </div>
             <button 
