@@ -1557,66 +1557,66 @@ export default function WorkerDashboard() {
   const renderOverview = () => (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div className="bg-black rounded-xl shadow p-6 text-white">
-        <div className="flex items-center justify-between">
+      <div className="bg-black rounded-xl shadow p-4 md:p-6 text-white">
+        <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
           <div>
-            <h2 className="text-2xl font-bold mb-2">Welcome back, John!</h2>
-            <p className="text-gray-300">Here's your performance overview for Q1 2024</p>
+            <h2 className="text-xl md:text-2xl font-bold mb-2">Welcome back, John!</h2>
+            <p className="text-sm md:text-base text-gray-300">Here's your performance overview for Q1 2024</p>
           </div>
-          <div className="text-right">
-            <div className="text-3xl font-bold">{dashboardMetrics.currentRating}</div>
-            <div className="text-gray-300">Current Rating</div>
+          <div className="text-center md:text-right">
+            <div className="text-2xl md:text-3xl font-bold">{dashboardMetrics.currentRating}</div>
+            <div className="text-sm md:text-base text-gray-300">Current Rating</div>
           </div>
         </div>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-3 md:p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Goals</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Goals</p>
               <p className="text-lg md:text-2xl font-bold text-black dark:text-white">
                 {dashboardMetrics.completedGoals}/{dashboardMetrics.totalGoals}
               </p>
             </div>
-            <Target className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white" />
+            <Target className="h-5 w-5 md:h-8 md:w-8 text-black dark:text-white" />
           </div>
         </div>
         
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-3 md:p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Tasks</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Tasks</p>
               <p className="text-lg md:text-2xl font-bold text-black dark:text-white">
                 {dashboardMetrics.completedTasks}/{dashboardMetrics.totalTasks}
               </p>
             </div>
-            <CheckSquare className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white" />
+            <CheckSquare className="h-5 w-5 md:h-8 md:w-8 text-black dark:text-white" />
           </div>
         </div>
         
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-3 md:p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Tasks Due</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Due</p>
               <p className="text-lg md:text-2xl font-bold text-gray-600 dark:text-gray-400">
                 {dashboardMetrics.overdueTasks}
               </p>
             </div>
-            <Clock className="h-6 w-6 md:h-8 md:w-8 text-gray-600 dark:text-gray-400" />
+            <Clock className="h-5 w-5 md:h-8 md:w-8 text-gray-600 dark:text-gray-400" />
           </div>
         </div>
         
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-3 md:p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400">Performance Trend</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Trend</p>
               <p className="text-lg md:text-2xl font-bold text-gray-700 dark:text-gray-300">
                 +{dashboardMetrics.performanceTrend}%
               </p>
             </div>
-            <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-gray-700 dark:text-gray-300" />
+            <TrendingUp className="h-5 w-5 md:h-8 md:w-8 text-gray-700 dark:text-gray-300" />
           </div>
         </div>
       </div>
@@ -1625,22 +1625,22 @@ export default function WorkerDashboard() {
       {showSelfAppraisal ? (
         renderEnhancedSelfAppraisal()
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-          <h3 className="text-xl font-semibold mb-4 flex items-center space-x-2">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
+          <h3 className="text-lg md:text-xl font-semibold mb-4 flex items-center space-x-2">
             <FileText className="h-5 w-5 text-black dark:text-white" />
             <span>Self-Appraisal</span>
           </h3>
           
           {appraisalStatus === 'Not Started' && (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FileText className="h-8 w-8 text-gray-400" />
+            <div className="text-center py-6 md:py-8">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="h-6 w-6 md:h-8 md:w-8 text-gray-400" />
               </div>
-              <h4 className="text-lg font-semibold mb-2">Ready to start your appraisal?</h4>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">Complete your comprehensive self-assessment with our new step-by-step process</p>
+              <h4 className="text-base md:text-lg font-semibold mb-2">Ready to start your appraisal?</h4>
+              <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 px-2">Complete your comprehensive self-assessment with our new step-by-step process</p>
               <button
                 onClick={handleStartAppraisal}
-                className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+                className="bg-black dark:bg-white text-white dark:text-black px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white text-sm md:text-base"
               >
                 Start Self-Appraisal
               </button>
@@ -1648,15 +1648,15 @@ export default function WorkerDashboard() {
           )}
 
           {appraisalStatus === 'In Progress' && (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+            <div className="text-center py-6 md:py-8">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-6 w-6 md:h-8 md:w-8 text-blue-600 dark:text-blue-400" />
               </div>
-              <h4 className="text-lg font-semibold mb-2">Appraisal in Progress</h4>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">Continue with your self-appraisal where you left off</p>
+              <h4 className="text-base md:text-lg font-semibold mb-2">Appraisal in Progress</h4>
+              <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 px-2">Continue with your self-appraisal where you left off</p>
               <button
                 onClick={handleContinueAppraisal}
-                className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+                className="bg-black dark:bg-white text-white dark:text-black px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white text-sm md:text-base"
               >
                 Continue Appraisal
               </button>
@@ -1664,21 +1664,21 @@ export default function WorkerDashboard() {
           )}
 
           {appraisalStatus === 'Submitted' && (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+            <div className="text-center py-6 md:py-8">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="h-6 w-6 md:h-8 md:w-8 text-green-600 dark:text-green-400" />
               </div>
-              <h4 className="text-lg font-semibold mb-2 text-black dark:text-white">Appraisal Submitted!</h4>
-              <p className="text-gray-600 dark:text-gray-400">Your comprehensive self-appraisal has been submitted for manager review.</p>
+              <h4 className="text-base md:text-lg font-semibold mb-2 text-black dark:text-white">Appraisal Submitted!</h4>
+              <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 px-2">Your comprehensive self-appraisal has been submitted for manager review.</p>
             </div>
           )}
         </div>
       )}
 
       {/* Recent Activity */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold">Recent Activity</h3>
+          <h3 className="text-lg md:text-xl font-semibold">Recent Activity</h3>
           <button 
             onClick={() => setShowAllNotifications(!showAllNotifications)}
             className="text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
@@ -1850,30 +1850,30 @@ export default function WorkerDashboard() {
   };
 
   const renderGoals = () => (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold">My Goals</h3>
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+        <h3 className="text-lg md:text-xl font-semibold">My Goals</h3>
         <button 
           onClick={() => setShowAddGoalModal(true)}
-          className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+          className="flex items-center justify-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-3 md:px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white text-sm md:text-base"
         >
           <Plus className="h-4 w-4" />
           <span>Add Goal</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {goals.map(goal => (
-          <div key={goal.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-            <div className="flex items-center justify-between mb-4">
+          <div key={goal.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(goal.status)}`}>
                 {goal.status}
               </span>
-              <span className="text-sm text-gray-600 dark:text-gray-400">{goal.category}</span>
+              <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">{goal.category}</span>
             </div>
             
-            <h4 className="font-semibold mb-2">{goal.title}</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{goal.description}</p>
+            <h4 className="font-semibold mb-2 text-sm md:text-base">{goal.title}</h4>
+            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-3">{goal.description}</p>
             
             <div className="mb-4">
               <div className="flex justify-between text-sm mb-1">
@@ -1945,12 +1945,12 @@ export default function WorkerDashboard() {
   );
 
   const renderTasks = () => (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold">My Tasks</h3>
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+        <h3 className="text-lg md:text-xl font-semibold">My Tasks</h3>
         <button 
           onClick={() => setShowAddTaskModal(true)}
-          className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+          className="flex items-center justify-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-3 md:px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white text-sm md:text-base"
         >
           <Plus className="h-4 w-4" />
           <span>Add Task</span>
@@ -1962,30 +1962,50 @@ export default function WorkerDashboard() {
           <table className="min-w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Task</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Priority</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Due Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Hours</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Task</th>
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
+                <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Priority</th>
+                <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Due Date</th>
+                <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Hours</th>
+                <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {tasks.map(task => (
                 <tr key={task.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td className="px-6 py-4">
+                  <td className="px-3 md:px-6 py-4">
                     <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{task.title}</div>
                     <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{task.description}</div>
+                    <div className="md:hidden mt-2 space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-500">Category:</span>
+                        <span className="text-xs text-gray-900 dark:text-gray-100">{task.category}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-500">Priority:</span>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
+                          {task.priority}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-500">Due:</span>
+                        <span className="text-xs text-gray-900 dark:text-gray-100">{task.dueDate}</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-500">Hours:</span>
+                        <span className="text-xs text-gray-900 dark:text-gray-100">{task.actualHours}/{task.estimatedHours}h</span>
+                      </div>
+                    </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{task.category}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{task.category}</td>
+                  <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
                       {task.priority}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{task.dueDate}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{task.dueDate}</td>
+                  <td className="px-3 md:px-6 py-4 whitespace-nowrap">
                     <select
                       value={task.status}
                       onChange={(e) => updateTaskStatus(task.id, e.target.value)}
@@ -1996,11 +2016,11 @@ export default function WorkerDashboard() {
                       <option value="Completed">Completed</option>
                     </select>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                  <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     {task.actualHours}/{task.estimatedHours}h
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
+                  <td className="px-3 md:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex space-x-1 md:space-x-2">
                       <button 
                         onClick={() => handleViewTask(task)}
                         className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
@@ -2034,18 +2054,18 @@ export default function WorkerDashboard() {
   );
 
   const renderPerformance = () => (
-    <div className="space-y-6">
-      <h3 className="text-xl font-semibold">Performance History</h3>
+    <div className="space-y-4 md:space-y-6">
+      <h3 className="text-lg md:text-xl font-semibold">Performance History</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-          <h4 className="font-semibold mb-4">Performance Trend</h4>
-          <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
+          <h4 className="font-semibold mb-3 md:mb-4 text-sm md:text-base">Performance Trend</h4>
+          <div className="space-y-3 md:space-y-4">
             {performanceHistory.map((performance, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div>
-                  <p className="font-medium">{performance.period}</p>
-                  <p className={`text-sm font-medium ${getRatingColor(performance.rating)}`}>
+                  <p className="font-medium text-sm md:text-base">{performance.period}</p>
+                  <p className={`text-xs md:text-sm font-medium ${getRatingColor(performance.rating)}`}>
                     {performance.rating}
                   </p>
                   <p className="text-xs text-gray-600 dark:text-gray-400">
@@ -2053,7 +2073,7 @@ export default function WorkerDashboard() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-black dark:text-white">{performance.score}</p>
+                  <p className="text-xl md:text-2xl font-bold text-black dark:text-white">{performance.score}</p>
                   <p className="text-xs text-gray-600 dark:text-gray-400">Score</p>
                 </div>
               </div>
@@ -2061,16 +2081,16 @@ export default function WorkerDashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-          <h4 className="font-semibold mb-4">Recent Feedback</h4>
-          <div className="space-y-4">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
+          <h4 className="font-semibold mb-3 md:mb-4 text-sm md:text-base">Recent Feedback</h4>
+          <div className="space-y-3 md:space-y-4">
             {performanceHistory.map((performance, index) => (
               <div key={index} className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div className="flex items-center space-x-2 mb-2">
                   <Star className="h-4 w-4 text-yellow-500" />
-                  <span className="font-medium">{performance.period}</span>
+                  <span className="font-medium text-sm md:text-base">{performance.period}</span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{performance.feedback}</p>
+                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-2">{performance.feedback}</p>
                 <div className="flex flex-wrap gap-1">
                   {performance.skillsImproved.map((skill: string) => (
                     <span key={skill} className="px-2 py-1 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 text-xs rounded">
@@ -2084,9 +2104,9 @@ export default function WorkerDashboard() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h4 className="font-semibold">Skills Assessment</h4>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0">
+          <h4 className="font-semibold text-sm md:text-base">Skills Assessment</h4>
           <button 
             onClick={() => setShowUpdateSkillsModal(true)}
             className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 text-sm"
@@ -2095,7 +2115,7 @@ export default function WorkerDashboard() {
           </button>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
             <h5 className="font-medium mb-3 text-sm text-gray-700 dark:text-gray-300">Technical Skills</h5>
             <div className="space-y-3">
@@ -2281,28 +2301,38 @@ export default function WorkerDashboard() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <div className="flex items-center justify-between">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">My Dashboard</h2>
-            <p className="text-gray-600 dark:text-gray-400">Track your performance, goals, and progress</p>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">My Dashboard</h2>
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">Track your performance, goals, and progress</p>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between md:justify-end space-x-2 md:space-x-4">
             <button 
               className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={() => setShowNotifications(!showNotifications)}
             >
-              <Bell className="h-6 w-6" />
+              <Bell className="h-5 w-5 md:h-6 md:w-6" />
               <span className="absolute top-1 right-1 h-3 w-3 bg-black dark:bg-white rounded-full"></span>
             </button>
             <button 
               onClick={() => setShowContactManagerModal(true)}
-              className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+              className="bg-black dark:bg-white text-white dark:text-black px-3 md:px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white text-sm md:text-base"
             >
-              <MessageSquare className="h-4 w-4 inline mr-2" />
-              Contact Manager
+              <MessageSquare className="h-4 w-4 inline mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Contact Manager</span>
+              <span className="sm:hidden">Contact</span>
             </button>
           </div>
         </div>
@@ -2311,7 +2341,7 @@ export default function WorkerDashboard() {
       {/* Navigation Tabs */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow">
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex space-x-8 px-6">
+          <nav className="flex overflow-x-auto scrollbar-hide px-4 md:px-6">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'goals', label: 'Goals', icon: Target },
@@ -2324,14 +2354,15 @@ export default function WorkerDashboard() {
                 <button
                   key={tab.id}
                   onClick={() => setSelectedTab(tab.id)}
-                  className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
+                  className={`flex items-center space-x-1 md:space-x-2 py-3 md:py-4 px-2 md:px-1 border-b-2 font-medium text-xs md:text-sm whitespace-nowrap ${
                     selectedTab === tab.id
                       ? 'border-black dark:border-white text-black dark:text-white'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
-                  <span>{tab.label}</span>
+                  <Icon className="h-3 w-3 md:h-4 md:w-4" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.label.substring(0, 3)}</span>
                 </button>
               );
             })}
