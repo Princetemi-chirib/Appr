@@ -107,11 +107,6 @@ const nextConfig = {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
 
-  // Build output settings
-  output: 'export', // For static export (GitHub Pages)
-  trailingSlash: true, // Required for GitHub Pages
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/Appr/' : '',
-  
   // Disable x-powered-by header for security
   poweredByHeader: false,
 
@@ -157,20 +152,6 @@ const nextConfig = {
       fullUrl: true,
     },
   },
-
-  // Development server configuration
-  ...(process.env.NODE_ENV === 'development' && {
-    // Only apply these in development
-    async rewrites() {
-      return [
-        // Hot reload for development
-        {
-          source: '/__nextjs_original-stack-frame',
-          destination: '/__nextjs_original-stack-frame',
-        },
-      ];
-    },
-  }),
 };
 
 module.exports = nextConfig;
