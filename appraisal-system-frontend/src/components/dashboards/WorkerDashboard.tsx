@@ -400,10 +400,10 @@ export default function WorkerDashboard() {
 
   // Step rendering functions
   const renderObjectivesStep = (approvedObjectives: any) => (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h4 className="text-lg font-semibold mb-4">Review Your Objectives</h4>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <h4 className="text-lg font-semibold mb-2 md:mb-4">Review Your Objectives</h4>
+        <p className="text-gray-600 dark:text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
           Review your approved objectives and provide initial feedback on your progress.
         </p>
       </div>
@@ -420,31 +420,31 @@ export default function WorkerDashboard() {
         };
 
         return (
-          <div key={obj.objectiveId} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h5 className="font-semibold">{objective?.name}</h5>
-              <span className="text-sm text-gray-600 dark:text-gray-400">Weight: {obj.weight}%</span>
+          <div key={obj.objectiveId} className="border border-gray-200 dark:border-gray-600 rounded-lg p-3 md:p-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-3 space-y-1 md:space-y-0">
+              <h5 className="font-semibold text-sm md:text-base">{objective?.name}</h5>
+              <span className="text-xs md:text-sm text-gray-600 dark:text-gray-400">Weight: {obj.weight}%</span>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Progress (%)</label>
+                <label className="block text-xs md:text-sm font-medium mb-1 md:mb-2">Progress (%)</label>
                 <input
                   type="number"
                   min="0"
                   max="100"
                   value={appraisalData.weightAchieved}
                   onChange={(e) => handleSelfAppraisalChange(obj.objectiveId, 'weightAchieved', parseInt(e.target.value) || 0)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  className="w-full px-2 md:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2">Self Rating</label>
+                <label className="block text-xs md:text-sm font-medium mb-1 md:mb-2">Self Rating</label>
                 <select
                   value={appraisalData.selfRating}
                   onChange={(e) => handleSelfAppraisalChange(obj.objectiveId, 'selfRating', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  className="w-full px-2 md:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
                 >
                   <option value="Exceeds">Exceeds Expectations</option>
                   <option value="Meets">Meets Expectations</option>
@@ -454,11 +454,11 @@ export default function WorkerDashboard() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-2">Initial Comments</label>
+              <label className="block text-xs md:text-sm font-medium mb-1 md:mb-2">Initial Comments</label>
               <textarea
                 value={appraisalData.comments}
                 onChange={(e) => handleSelfAppraisalChange(obj.objectiveId, 'comments', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="w-full px-2 md:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
                 rows={3}
                 placeholder="Brief overview of your progress..."
               />
@@ -470,10 +470,10 @@ export default function WorkerDashboard() {
   );
 
   const renderAchievementsStep = (approvedObjectives: any) => (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h4 className="text-lg font-semibold mb-4">Document Your Achievements</h4>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <h4 className="text-lg font-semibold mb-2 md:mb-4">Document Your Achievements</h4>
+        <p className="text-gray-600 dark:text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
           Detail your key achievements and accomplishments for each objective.
         </p>
       </div>
@@ -483,15 +483,15 @@ export default function WorkerDashboard() {
         const appraisalData = selfAppraisalData[obj.objectiveId] || {};
 
         return (
-          <div key={obj.objectiveId} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-            <h5 className="font-semibold mb-3">{objective?.name}</h5>
+          <div key={obj.objectiveId} className="border border-gray-200 dark:border-gray-600 rounded-lg p-3 md:p-4">
+            <h5 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">{objective?.name}</h5>
             
             <div>
-              <label className="block text-sm font-medium mb-2">Key Achievements</label>
+              <label className="block text-xs md:text-sm font-medium mb-1 md:mb-2">Key Achievements</label>
               <textarea
                 value={appraisalData.achievements || ''}
                 onChange={(e) => handleSelfAppraisalChange(obj.objectiveId, 'achievements', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                className="w-full px-2 md:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
                 rows={4}
                 placeholder="Describe your key achievements, milestones reached, and positive outcomes..."
               />
@@ -503,22 +503,22 @@ export default function WorkerDashboard() {
   );
 
   const renderSkillsStep = () => (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h4 className="text-lg font-semibold mb-4">Skills Assessment</h4>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <h4 className="text-lg font-semibold mb-2 md:mb-4">Skills Assessment</h4>
+        <p className="text-gray-600 dark:text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
           Evaluate your current skills and identify areas for improvement.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <h5 className="font-semibold">Technical Skills</h5>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div className="space-y-3 md:space-y-4">
+          <h5 className="font-semibold text-sm md:text-base">Technical Skills</h5>
           {['React Development', 'TypeScript', 'Node.js', 'Database Design'].map(skill => (
             <div key={skill} className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">{skill}</span>
-                <select className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-1 sm:space-y-0">
+                <span className="text-xs md:text-sm">{skill}</span>
+                <select className="text-xs md:text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 w-full sm:w-auto">
                   <option value="beginner">Beginner</option>
                   <option value="intermediate">Intermediate</option>
                   <option value="advanced">Advanced</option>
@@ -529,13 +529,13 @@ export default function WorkerDashboard() {
           ))}
         </div>
 
-        <div className="space-y-4">
-          <h5 className="font-semibold">Soft Skills</h5>
+        <div className="space-y-3 md:space-y-4">
+          <h5 className="font-semibold text-sm md:text-base">Soft Skills</h5>
           {['Communication', 'Leadership', 'Problem Solving', 'Teamwork'].map(skill => (
             <div key={skill} className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">{skill}</span>
-                <select className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-1 sm:space-y-0">
+                <span className="text-xs md:text-sm">{skill}</span>
+                <select className="text-xs md:text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 w-full sm:w-auto">
                   <option value="beginner">Beginner</option>
                   <option value="intermediate">Intermediate</option>
                   <option value="advanced">Advanced</option>
@@ -550,37 +550,37 @@ export default function WorkerDashboard() {
   );
 
   const renderFutureStep = () => (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h4 className="text-lg font-semibold mb-4">Future Goals & Development</h4>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <h4 className="text-lg font-semibold mb-2 md:mb-4">Future Goals & Development</h4>
+        <p className="text-gray-600 dark:text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
           Outline your goals for the next period and development needs.
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Career Goals</label>
+          <label className="block text-xs md:text-sm font-medium mb-1 md:mb-2">Career Goals</label>
           <textarea
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-2 md:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
             rows={3}
             placeholder="What are your career goals for the next 6-12 months?"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Skills to Develop</label>
+          <label className="block text-xs md:text-sm font-medium mb-1 md:mb-2">Skills to Develop</label>
           <textarea
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-2 md:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
             rows={3}
             placeholder="What skills would you like to develop or improve?"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Support Needed</label>
+          <label className="block text-xs md:text-sm font-medium mb-1 md:mb-2">Support Needed</label>
           <textarea
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-2 md:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
             rows={3}
             placeholder="What support or resources do you need to achieve your goals?"
           />
@@ -590,23 +590,23 @@ export default function WorkerDashboard() {
   );
 
   const renderReviewStep = (approvedObjectives: any) => (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h4 className="text-lg font-semibold mb-4">Review & Summary</h4>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <h4 className="text-lg font-semibold mb-2 md:mb-4">Review & Summary</h4>
+        <p className="text-gray-600 dark:text-gray-400 mb-4 md:mb-6 text-sm md:text-base">
           Review your self-appraisal before submitting it for manager review.
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         {approvedObjectives.objectives.map((obj: any) => {
           const objective = getObjectiveById(obj.objectiveId);
           const appraisalData = selfAppraisalData[obj.objectiveId] || {};
 
           return (
-            <div key={obj.objectiveId} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-              <h5 className="font-semibold mb-3">{objective?.name}</h5>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div key={obj.objectiveId} className="border border-gray-200 dark:border-gray-600 rounded-lg p-3 md:p-4">
+              <h5 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">{objective?.name}</h5>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4 text-xs md:text-sm">
                 <div>
                   <span className="font-medium">Progress:</span> {appraisalData.weightAchieved || 0}%
                 </div>
@@ -623,11 +623,11 @@ export default function WorkerDashboard() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">Overall Comments</label>
+        <label className="block text-xs md:text-sm font-medium mb-1 md:mb-2">Overall Comments</label>
         <textarea
           value={overallComments}
           onChange={(e) => setOverallComments(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+          className="w-full px-2 md:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
           rows={4}
           placeholder="Provide overall feedback about your performance, achievements, and areas for growth..."
         />
@@ -843,7 +843,7 @@ export default function WorkerDashboard() {
         <div className="space-y-3">
           {mockNotifications.map(notification => (
             <div key={notification.id} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-black dark:bg-white rounded-full"></div>
               <div className="flex-1">
                 <p className="font-medium">{notification.message}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">{notification.time}</p>
@@ -911,7 +911,7 @@ export default function WorkerDashboard() {
               
               return (
                 <div key={step.id} className="flex flex-col items-center space-y-2">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${
+                  <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center border-2 transition-all ${
                     isActive 
                       ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white' 
                       : isCompleted
@@ -919,12 +919,12 @@ export default function WorkerDashboard() {
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-400 border-gray-300 dark:border-gray-600'
                   }`}>
                     {isCompleted ? (
-                      <CheckCircle className="h-5 w-5" />
+                      <CheckCircle className="h-4 w-4 md:h-5 md:w-5" />
                     ) : (
-                      <Icon className="h-5 w-5" />
+                      <Icon className="h-4 w-4 md:h-5 md:w-5" />
                     )}
                   </div>
-                  <span className={`text-xs font-medium ${
+                  <span className={`text-xs font-medium text-center ${
                     isActive ? 'text-black dark:text-white' : 'text-gray-500 dark:text-gray-400'
                   }`}>
                     {step.label}
@@ -936,7 +936,7 @@ export default function WorkerDashboard() {
         </div>
 
         {/* Step Content */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
           {appraisalStep === 'objectives' && renderObjectivesStep(approvedObjectives)}
           {appraisalStep === 'achievements' && renderAchievementsStep(approvedObjectives)}
           {appraisalStep === 'skills' && renderSkillsStep()}
@@ -944,20 +944,20 @@ export default function WorkerDashboard() {
           {appraisalStep === 'review' && renderReviewStep(approvedObjectives)}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
+          <div className="flex flex-col md:flex-row justify-between items-center mt-6 md:mt-8 pt-4 md:pt-6 border-t border-gray-200 dark:border-gray-600 space-y-3 md:space-y-0">
             <button
               onClick={handlePreviousStep}
               disabled={appraisalStep === 'objectives'}
-              className="flex items-center space-x-2 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full md:w-auto flex items-center justify-center space-x-2 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronUp className="h-4 w-4 transform rotate-90" />
               <span>Previous</span>
             </button>
             
-            <div className="flex items-center space-x-3">
+            <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-3 w-full md:w-auto">
               <button
                 onClick={() => setShowSelfAppraisal(false)}
-                className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="w-full md:w-auto px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 Save Draft
               </button>
@@ -965,7 +965,7 @@ export default function WorkerDashboard() {
               {appraisalStep === 'review' ? (
                 <button
                   onClick={handleSubmitSelfAppraisal}
-                  className="flex items-center space-x-2 px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+                  className="w-full md:w-auto flex items-center justify-center space-x-2 px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
                 >
                   <Send className="h-4 w-4" />
                   <span>Submit Appraisal</span>
@@ -973,10 +973,10 @@ export default function WorkerDashboard() {
               ) : (
                 <button
                   onClick={handleNextStep}
-                  className="flex items-center space-x-2 px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
+                  className="w-full md:w-auto flex items-center justify-center space-x-2 px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white"
                 >
                   <span>Next</span>
-                  <ChevronUp className="h-4 w-4 transform -rotate-90" />
+                  <ChevronUp className="h-4 w-4 transform rotate-90" />
                 </button>
               )}
             </div>
@@ -990,7 +990,7 @@ export default function WorkerDashboard() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-semibold">My Goals</h3>
-        <button className="flex items-center space-x-2 bg-black dark:bg-white text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <button className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white">
           <Plus className="h-4 w-4" />
           <span>Add Goal</span>
         </button>
@@ -1023,7 +1023,7 @@ export default function WorkerDashboard() {
             
             <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
               <span>Due: {goal.dueDate}</span>
-              <button className="text-black dark:text-white hover:text-indigo-700">
+              <button className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300">
                 <Edit className="h-4 w-4" />
               </button>
             </div>
@@ -1037,7 +1037,7 @@ export default function WorkerDashboard() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-semibold">My Tasks</h3>
-        <button className="flex items-center space-x-2 bg-black dark:bg-white text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        <button className="flex items-center space-x-2 bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white">
           <Plus className="h-4 w-4" />
           <span>Add Task</span>
         </button>
@@ -1076,10 +1076,10 @@ export default function WorkerDashboard() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
-                      <button className="text-black dark:text-white hover:text-indigo-900 dark:hover:text-indigo-400">
+                      <button className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300">
                         <Eye className="h-4 w-4" />
                       </button>
-                      <button className="text-gray-700 dark:text-gray-300 hover:text-blue-900 dark:hover:text-blue-400">
+                      <button className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
                         <Edit className="h-4 w-4" />
                       </button>
                     </div>
@@ -1137,7 +1137,7 @@ export default function WorkerDashboard() {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
         <div className="flex justify-between items-center mb-4">
           <h4 className="font-semibold">Skills Assessment</h4>
-          <button className="text-black dark:text-white hover:text-indigo-700 text-sm">Update Skills</button>
+          <button className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 text-sm">Update Skills</button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1252,7 +1252,7 @@ export default function WorkerDashboard() {
                         <div className="flex items-center space-x-3 flex-1">
                           <button
                             onClick={() => handleObjectiveSelection(objective.id, !isObjectiveSelected(objective.id))}
-                            className="text-indigo-600 hover:text-indigo-900 dark:hover:text-indigo-400"
+                            className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
                           >
                             {isObjectiveSelected(objective.id) ? (
                               <CheckSquare className="h-5 w-5" />
@@ -1277,7 +1277,7 @@ export default function WorkerDashboard() {
                               max="100"
                               value={objectiveWeights[objective.id] || objective.defaultWeight}
                               onChange={(e) => handleWeightChange(objective.id, parseInt(e.target.value) || 0)}
-                              className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
                             <span className="text-sm text-gray-600 dark:text-gray-400">%</span>
                           </div>
@@ -1365,7 +1365,7 @@ export default function WorkerDashboard() {
                   onClick={() => setSelectedTab(tab.id)}
                   className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
                     selectedTab === tab.id
-                      ? 'border-indigo-500 text-black dark:text-white'
+                      ? 'border-black dark:border-white text-black dark:text-white'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >

@@ -561,6 +561,189 @@ export const Layout: React.FC<LayoutProps> = ({ children, userRole, onRoleChange
         />
       )}
 
+      {/* Mobile Notification Dropdown */}
+      {isMobile && showNotificationDropdown && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="absolute top-16 left-4 right-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 max-h-[80vh] overflow-y-auto">
+            {/* Header */}
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-lg">Notifications</h3>
+                <div className="flex items-center space-x-2">
+                  {unreadCount > 0 && (
+                    <button
+                      onClick={handleMarkAllAsRead}
+                      className="text-sm text-black dark:text-white hover:underline"
+                    >
+                      Mark all read
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setShowNotificationDropdown(false)}
+                    className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Notifications List */}
+            <div className="p-2">
+              {notifications.length === 0 ? (
+                <div className="text-center py-8">
+                  <Bell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500 dark:text-gray-400">No notifications</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {notifications.map(notification => (
+                    <div
+                      key={notification.id}
+                      className={`p-3 rounded-lg border-l-4 ${getNotificationColor(notification.type)} ${
+                        !notification.read ? 'ring-2 ring-gray-300 dark:ring-gray-700' : ''
+                      }`}
+                    >
+                      <div className="flex items-start space-x-3">
+                        {getNotificationIcon(notification.type)}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <p className={`text-sm font-medium ${!notification.read ? 'text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400'}`}>
+                                {notification.title}
+                              </p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                {notification.message}
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                                {notification.time}
+                              </p>
+                            </div>
+                            <div className="flex items-center space-x-1 ml-2">
+                              {!notification.read && (
+                                <button
+                                  onClick={() => handleMarkAsRead(notification.id)}
+                                  className="text-xs text-black dark:text-white hover:underline"
+                                >
+                                  Mark read
+                                </button>
+                              )}
+                              <button
+                                onClick={() => handleDeleteNotification(notification.id)}
+                                className="text-gray-400 hover:text-black dark:text-gray-500 dark:hover:text-white"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            {notifications.length > 0 && (
+              <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+                <button className="w-full text-center text-sm text-black dark:text-white hover:underline">
+                  View all notifications
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Account Dropdown */}
+      {isMobile && showAccountDropdown && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="absolute top-16 left-4 right-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 max-h-[80vh] overflow-y-auto">
+            {/* User Info Section */}
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <span className="w-16 h-16 bg-black dark:bg-white rounded-full flex items-center justify-center text-white dark:text-black font-bold text-xl">
+                    {userData.avatar}
+                  </span>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg">{userData.name}</h3>
+                    <p className="text-gray-600 dark:text-gray-400">{userData.position}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500">{userData.department}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowAccountDropdown(false)}
+                  className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* User Details */}
+            <div className="p-6 space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <Mail className="h-4 w-4 text-gray-500" />
+                  <div>
+                    <p className="text-sm font-medium">Email</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{userData.email}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <Phone className="h-4 w-4 text-gray-500" />
+                  <div>
+                    <p className="text-sm font-medium">Phone</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{userData.phone}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <User className="h-4 w-4 text-gray-500" />
+                  <div>
+                    <p className="text-sm font-medium">Employee ID</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{userData.employeeId}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <Calendar className="h-4 w-4 text-gray-500" />
+                  <div>
+                    <p className="text-sm font-medium">Join Date</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{userData.joinDate}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 space-y-2">
+              <button
+                onClick={handleSettingsClick}
+                className="w-full flex items-center space-x-3 px-4 py-3 text-left rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <Settings className="h-4 w-4 text-gray-500" />
+                <span className="font-medium">Settings</span>
+              </button>
+              
+              <button
+                onClick={handleLogoutClick}
+                className="w-full flex items-center space-x-3 px-4 py-3 text-left rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-black dark:text-white cursor-pointer"
+                type="button"
+                role="button"
+                aria-label="Sign out of your account"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="font-medium">Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile Backdrop */}
       {(showAccountDropdown || showNotificationDropdown) && isMobile && (
         <div 
