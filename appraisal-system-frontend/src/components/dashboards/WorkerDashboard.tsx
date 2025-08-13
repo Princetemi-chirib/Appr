@@ -268,6 +268,7 @@ export default function WorkerDashboard() {
   const [showEditGoalModal, setShowEditGoalModal] = useState(false);
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
   const [showViewTaskModal, setShowViewTaskModal] = useState(false);
+  const [showAddSkillModal, setShowAddSkillModal] = useState(false);
   const [editingGoal, setEditingGoal] = useState<any>(null);
   const [editingTask, setEditingTask] = useState<any>(null);
   const [viewingTask, setViewingTask] = useState<any>(null);
@@ -294,6 +295,14 @@ export default function WorkerDashboard() {
   const [contactMessage, setContactMessage] = useState({
     subject: '',
     message: ''
+  });
+  
+  const [newSkill, setNewSkill] = useState({
+    name: '',
+    category: 'technical',
+    level: 'beginner',
+    progress: 25,
+    lastAssessed: new Date().toISOString().split('T')[0]
   });
   
   const [skillsFormData, setSkillsFormData] = useState({
@@ -1051,6 +1060,52 @@ export default function WorkerDashboard() {
     setSkills(skillsFormData);
     setShowUpdateSkillsModal(false);
     alert('Skills updated successfully!');
+  };
+
+  const handleAddSkill = () => {
+    if (!newSkill.name.trim()) {
+      alert('Please enter a skill name');
+      return;
+    }
+
+    const skillToAdd = {
+      name: newSkill.name.trim(),
+      level: newSkill.level,
+      progress: newSkill.progress,
+      lastAssessed: newSkill.lastAssessed
+    };
+
+    if (newSkill.category === 'technical') {
+      setSkills(prev => ({
+        ...prev,
+        technical: [...prev.technical, skillToAdd]
+      }));
+      setSkillsFormData(prev => ({
+        ...prev,
+        technical: [...prev.technical, skillToAdd]
+      }));
+    } else {
+      setSkills(prev => ({
+        ...prev,
+        soft: [...prev.soft, skillToAdd]
+      }));
+      setSkillsFormData(prev => ({
+        ...prev,
+        soft: [...prev.soft, skillToAdd]
+      }));
+    }
+
+    // Reset form
+    setNewSkill({
+      name: '',
+      category: 'technical',
+      level: 'beginner',
+      progress: 25,
+      lastAssessed: new Date().toISOString().split('T')[0]
+    });
+
+    setShowAddSkillModal(false);
+    alert('Skill added successfully!');
   };
 
   const handleContactManager = () => {
@@ -2074,12 +2129,20 @@ export default function WorkerDashboard() {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0">
           <h4 className="font-semibold text-sm md:text-base">Skills Assessment</h4>
-          <button 
-            onClick={() => setShowUpdateSkillsModal(true)}
-            className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 text-sm"
-          >
-            Update Skills
-          </button>
+          <div className="flex space-x-2">
+            <button 
+              onClick={() => setShowAddSkillModal(true)}
+              className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 text-sm"
+            >
+              Add Skill
+            </button>
+            <button 
+              onClick={() => setShowUpdateSkillsModal(true)}
+              className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 text-sm"
+            >
+              Update Skills
+            </button>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -2880,6 +2943,109 @@ export default function WorkerDashboard() {
                   className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
                 >
                   Update Task
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Skill Modal */}
+      {showAddSkillModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-md w-full">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Add New Skill</h3>
+                <button 
+                  onClick={() => setShowAddSkillModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Skill Name *</label>
+                  <input
+                    type="text"
+                    value={newSkill.name}
+                    onChange={(e) => setNewSkill(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    placeholder="Enter skill name"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Category</label>
+                  <select
+                    value={newSkill.category}
+                    onChange={(e) => setNewSkill(prev => ({ ...prev, category: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  >
+                    <option value="technical">Technical Skills</option>
+                    <option value="soft">Soft Skills</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Skill Level</label>
+                  <select
+                    value={newSkill.level}
+                    onChange={(e) => {
+                      const level = e.target.value;
+                      const progress = 
+                        level === 'beginner' ? 25 :
+                        level === 'intermediate' ? 50 :
+                        level === 'advanced' ? 75 : 100;
+                      setNewSkill(prev => ({ ...prev, level, progress }));
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  >
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="expert">Expert</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Last Assessed Date</label>
+                  <input
+                    type="date"
+                    value={newSkill.lastAssessed}
+                    onChange={(e) => setNewSkill(prev => ({ ...prev, lastAssessed: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Progress Level</label>
+                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mb-2">
+                    <div 
+                      className="bg-black dark:bg-white h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${newSkill.progress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {newSkill.progress}% - {newSkill.level.charAt(0).toUpperCase() + newSkill.level.slice(1)}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowAddSkillModal(false)}
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddSkill}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+                >
+                  Add Skill
                 </button>
               </div>
             </div>
