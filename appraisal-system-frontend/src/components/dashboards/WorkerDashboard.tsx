@@ -1087,14 +1087,39 @@ export default function WorkerDashboard() {
 
       {/* Recent Activity */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <h3 className="text-xl font-semibold mb-4">Recent Activity</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold">Recent Activity</h3>
+          <button 
+            onClick={() => setShowNotifications(!showNotifications)}
+            className="text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
+          >
+            View All
+          </button>
+        </div>
         <div className="space-y-3">
-          {mockNotifications.map(notification => (
-            <div key={notification.id} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="w-2 h-2 bg-black dark:bg-white rounded-full"></div>
+          {notifications.slice(0, 3).map(notification => (
+            <div 
+              key={notification.id} 
+              className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                notification.read 
+                  ? 'bg-gray-50 dark:bg-gray-700' 
+                  : 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'
+              }`}
+              onClick={() => markNotificationAsRead(notification.id)}
+            >
+              <div className={`w-2 h-2 rounded-full ${
+                notification.read 
+                  ? 'bg-gray-400 dark:bg-gray-500' 
+                  : 'bg-blue-500'
+              }`}></div>
               <div className="flex-1">
                 <p className="font-medium">{notification.message}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{notification.time}</p>
+                <div className="flex justify-between items-center mt-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{notification.time}</p>
+                  {!notification.read && (
+                    <span className="text-xs text-blue-600 dark:text-blue-400">{notification.action}</span>
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -1245,7 +1270,7 @@ export default function WorkerDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockGoals.map(goal => (
+        {goals.map(goal => (
           <div key={goal.id} className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
             <div className="flex items-center justify-between mb-4">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(goal.status)}`}>
@@ -1255,6 +1280,7 @@ export default function WorkerDashboard() {
             </div>
             
             <h4 className="font-semibold mb-2">{goal.title}</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{goal.description}</p>
             
             <div className="mb-4">
               <div className="flex justify-between text-sm mb-1">
@@ -1268,12 +1294,45 @@ export default function WorkerDashboard() {
                 ></div>
               </div>
             </div>
+
+            {/* Milestones */}
+            {goal.milestones && (
+              <div className="mb-4">
+                <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+                  Milestones ({goal.completedMilestones}/{goal.milestones.length})
+                </p>
+                <div className="space-y-1">
+                  {goal.milestones.map((milestone: string, index: number) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${
+                        index < goal.completedMilestones 
+                          ? 'bg-green-500' 
+                          : 'bg-gray-300 dark:bg-gray-600'
+                      }`}></div>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">{milestone}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             
             <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
               <span>Due: {goal.dueDate}</span>
-              <button className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300">
-                <Edit className="h-4 w-4" />
-              </button>
+              <div className="flex space-x-2">
+                <button 
+                  onClick={() => {
+                    const newProgress = Math.min(goal.progress + 10, goal.target);
+                    updateGoalProgress(goal.id, newProgress);
+                  }}
+                  className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
+                  title="Update Progress"
+                >
+                  <TrendingUp className="h-4 w-4" />
+                </button>
+                <button className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
+                  <Edit className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -1301,14 +1360,16 @@ export default function WorkerDashboard() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Priority</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Due Date</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Hours</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {mockTasks.map(task => (
+              {tasks.map(task => (
                 <tr key={task.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{task.title}</div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{task.description}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{task.category}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -1318,9 +1379,18 @@ export default function WorkerDashboard() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{task.dueDate}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
-                      {task.status}
-                    </span>
+                    <select
+                      value={task.status}
+                      onChange={(e) => updateTaskStatus(task.id, e.target.value)}
+                      className={`px-2 py-1 rounded-full text-xs font-medium border-0 ${getStatusColor(task.status)}`}
+                    >
+                      <option value="Not Started">Not Started</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                    {task.actualHours}/{task.estimatedHours}h
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
@@ -1349,12 +1419,15 @@ export default function WorkerDashboard() {
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
           <h4 className="font-semibold mb-4">Performance Trend</h4>
           <div className="space-y-4">
-            {mockPerformanceHistory.map((performance, index) => (
+            {performanceHistory.map((performance, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div>
                   <p className="font-medium">{performance.period}</p>
                   <p className={`text-sm font-medium ${getRatingColor(performance.rating)}`}>
                     {performance.rating}
+                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    Goals: {performance.goalsAchieved}/{performance.totalGoals}
                   </p>
                 </div>
                 <div className="text-right">
@@ -1369,13 +1442,20 @@ export default function WorkerDashboard() {
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
           <h4 className="font-semibold mb-4">Recent Feedback</h4>
           <div className="space-y-4">
-            {mockPerformanceHistory.map((performance, index) => (
+            {performanceHistory.map((performance, index) => (
               <div key={index} className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div className="flex items-center space-x-2 mb-2">
                   <Star className="h-4 w-4 text-yellow-500" />
                   <span className="font-medium">{performance.period}</span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{performance.feedback}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{performance.feedback}</p>
+                <div className="flex flex-wrap gap-1">
+                  {performance.skillsImproved.map((skill: string) => (
+                    <span key={skill} className="px-2 py-1 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 text-xs rounded">
+                      +{skill}
+                    </span>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
@@ -1388,44 +1468,50 @@ export default function WorkerDashboard() {
           <button className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 text-sm">Update Skills</button>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm">React Development</span>
-              <span className="text-sm font-medium text-black dark:text-white">Advanced</span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div className="bg-black dark:bg-white h-2 rounded-full" style={{ width: '90%' }}></div>
-            </div>
-          </div>
-          
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm">Project Management</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Intermediate</span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div className="bg-gray-700 dark:bg-gray-300 h-2 rounded-full" style={{ width: '70%' }}></div>
-            </div>
-          </div>
-          
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm">Communication</span>
-              <span className="text-sm font-medium text-black dark:text-white">Advanced</span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div className="bg-black dark:bg-white h-2 rounded-full" style={{ width: '85%' }}></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h5 className="font-medium mb-3 text-sm text-gray-700 dark:text-gray-300">Technical Skills</h5>
+            <div className="space-y-3">
+              {skills.technical.map((skill) => (
+                <div key={skill.name} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">{skill.name}</span>
+                    <span className="text-sm font-medium text-black dark:text-white">{skill.level}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                    <div 
+                      className="bg-black dark:bg-white h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${skill.progress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Last assessed: {skill.lastAssessed}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
           
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm">Leadership</span>
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Beginner</span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-              <div className="bg-gray-600 dark:bg-gray-400 h-2 rounded-full" style={{ width: '40%' }}></div>
+          <div>
+            <h5 className="font-medium mb-3 text-sm text-gray-700 dark:text-gray-300">Soft Skills</h5>
+            <div className="space-y-3">
+              {skills.soft.map((skill) => (
+                <div key={skill.name} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">{skill.name}</span>
+                    <span className="text-sm font-medium text-black dark:text-white">{skill.level}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                    <div 
+                      className="bg-black dark:bg-white h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${skill.progress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Last assessed: {skill.lastAssessed}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
