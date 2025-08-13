@@ -265,6 +265,12 @@ export default function WorkerDashboard() {
   const [showUpdateSkillsModal, setShowUpdateSkillsModal] = useState(false);
   const [showContactManagerModal, setShowContactManagerModal] = useState(false);
   const [showAllNotifications, setShowAllNotifications] = useState(false);
+  const [showEditGoalModal, setShowEditGoalModal] = useState(false);
+  const [showEditTaskModal, setShowEditTaskModal] = useState(false);
+  const [showViewTaskModal, setShowViewTaskModal] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<any>(null);
+  const [editingTask, setEditingTask] = useState<any>(null);
+  const [viewingTask, setViewingTask] = useState<any>(null);
   
   // Form states
   const [newGoal, setNewGoal] = useState({
@@ -849,14 +855,27 @@ export default function WorkerDashboard() {
 
   // Update dashboard metrics when data changes
   const updateDashboardMetrics = () => {
+    const completedGoals = goals.filter(g => g.status === 'Completed').length;
+    const completedTasks = tasks.filter(t => t.status === 'Completed').length;
+    const overdueTasks = tasks.filter(t => new Date(t.dueDate) < new Date() && t.status !== 'Completed').length;
+    
+    // Calculate performance trend based on actual data
+    const goalCompletionRate = goals.length > 0 ? (completedGoals / goals.length) * 100 : 0;
+    const taskCompletionRate = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
+    const performanceTrend = Math.round((goalCompletionRate + taskCompletionRate) / 2);
+    
+    // Calculate current rating based on actual performance
+    const avgGoalProgress = goals.length > 0 ? goals.reduce((sum, goal) => sum + (goal.progress / goal.target), 0) / goals.length : 0;
+    const currentRating = Math.min(5, Math.max(1, avgGoalProgress * 5));
+    
     setDashboardMetrics({
       totalGoals: goals.length,
-      completedGoals: goals.filter(g => g.status === 'Completed').length,
+      completedGoals,
       totalTasks: tasks.length,
-      completedTasks: tasks.filter(t => t.status === 'Completed').length,
-      overdueTasks: tasks.filter(t => new Date(t.dueDate) < new Date() && t.status !== 'Completed').length,
-      currentRating: performanceHistory[0]?.score || 4.2,
-      performanceTrend: 12
+      completedTasks,
+      overdueTasks,
+      currentRating: Math.round(currentRating * 10) / 10,
+      performanceTrend
     });
   };
 
@@ -865,7 +884,21 @@ export default function WorkerDashboard() {
     setGoals(prevGoals => 
       prevGoals.map(goal => 
         goal.id === goalId 
-          ? { ...goal, progress, status: progress >= goal.target ? 'Completed' : 'In Progress' }
+          ? { 
+              ...goal, 
+              progress, 
+              status: progress >= goal.target ? 'Completed' : progress > 0 ? 'In Progress' : 'Not Started' 
+            }
+          : goal
+      )
+    );
+  };
+
+  const updateMilestoneProgress = (goalId: number, completedMilestones: number) => {
+    setGoals(prevGoals => 
+      prevGoals.map(goal => 
+        goal.id === goalId 
+          ? { ...goal, completedMilestones }
           : goal
       )
     );
@@ -1019,6 +1052,98 @@ export default function WorkerDashboard() {
     }));
   };
 
+  // Edit and view functions
+  const handleEditGoal = (goal: any) => {
+    setEditingGoal(goal);
+    setNewGoal({
+      title: goal.title,
+      category: goal.category,
+      description: goal.description,
+      target: goal.target,
+      dueDate: goal.dueDate,
+      milestones: goal.milestones || ['']
+    });
+    setShowEditGoalModal(true);
+  };
+
+  const handleEditTask = (task: any) => {
+    setEditingTask(task);
+    setNewTask({
+      title: task.title,
+      description: task.description,
+      priority: task.priority,
+      category: task.category,
+      dueDate: task.dueDate,
+      estimatedHours: task.estimatedHours
+    });
+    setShowEditTaskModal(true);
+  };
+
+  const handleViewTask = (task: any) => {
+    setViewingTask(task);
+    setShowViewTaskModal(true);
+  };
+
+  const handleUpdateGoal = () => {
+    if (!newGoal.title || !newGoal.description || !newGoal.dueDate) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
+    const updatedGoal = {
+      ...editingGoal,
+      title: newGoal.title,
+      category: newGoal.category,
+      description: newGoal.description,
+      target: newGoal.target,
+      dueDate: newGoal.dueDate,
+      milestones: newGoal.milestones.filter(m => m.trim() !== '')
+    };
+    
+    setGoals(prev => prev.map(goal => goal.id === editingGoal.id ? updatedGoal : goal));
+    setShowEditGoalModal(false);
+    setEditingGoal(null);
+  };
+
+  const handleUpdateTask = () => {
+    if (!newTask.title || !newTask.description || !newTask.dueDate) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
+    const updatedTask = {
+      ...editingTask,
+      title: newTask.title,
+      description: newTask.description,
+      priority: newTask.priority,
+      category: newTask.category,
+      dueDate: newTask.dueDate,
+      estimatedHours: newTask.estimatedHours
+    };
+    
+    setTasks(prev => prev.map(task => task.id === editingTask.id ? updatedTask : task));
+    setShowEditTaskModal(false);
+    setEditingTask(null);
+  };
+
+  const handleDeleteGoal = (goalId: number) => {
+    if (confirm('Are you sure you want to delete this goal?')) {
+      setGoals(prev => prev.filter(goal => goal.id !== goalId));
+    }
+  };
+
+  const handleDeleteTask = (taskId: number) => {
+    if (confirm('Are you sure you want to delete this task?')) {
+      setTasks(prev => prev.filter(task => task.id !== taskId));
+    }
+  };
+
+  const updateTaskHours = (taskId: number, hours: number) => {
+    setTasks(prev => prev.map(task => 
+      task.id === taskId ? { ...task, actualHours: hours } : task
+    ));
+  };
+
   // Update metrics when data changes
   useEffect(() => {
     updateDashboardMetrics();
@@ -1098,11 +1223,336 @@ export default function WorkerDashboard() {
                 <span>Save Section</span>
               </button>
             </div>
+                  </div>
+      )}
+
+      {/* Edit Goal Modal */}
+      {showEditGoalModal && editingGoal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Edit Goal</h3>
+                <button 
+                  onClick={() => setShowEditGoalModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Goal Title *</label>
+                  <input
+                    type="text"
+                    value={newGoal.title}
+                    onChange={(e) => setNewGoal(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    placeholder="Enter goal title"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Category</label>
+                  <select
+                    value={newGoal.category}
+                    onChange={(e) => setNewGoal(prev => ({ ...prev, category: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  >
+                    <option value="Learning">Learning</option>
+                    <option value="Leadership">Leadership</option>
+                    <option value="Quality">Quality</option>
+                    <option value="Project">Project</option>
+                    <option value="Personal">Personal</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Description *</label>
+                  <textarea
+                    value={newGoal.description}
+                    onChange={(e) => setNewGoal(prev => ({ ...prev, description: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    rows={3}
+                    placeholder="Describe your goal"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Target Value</label>
+                    <input
+                      type="number"
+                      value={newGoal.target}
+                      onChange={(e) => setNewGoal(prev => ({ ...prev, target: parseInt(e.target.value) || 100 }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Due Date *</label>
+                    <input
+                      type="date"
+                      value={newGoal.dueDate}
+                      onChange={(e) => setNewGoal(prev => ({ ...prev, dueDate: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Milestones</label>
+                  <div className="space-y-2">
+                    {newGoal.milestones.map((milestone, index) => (
+                      <div key={index} className="flex space-x-2">
+                        <input
+                          type="text"
+                          value={milestone}
+                          onChange={(e) => updateMilestone(index, e.target.value)}
+                          className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                          placeholder={`Milestone ${index + 1}`}
+                        />
+                        <button
+                          onClick={() => removeMilestone(index)}
+                          className="px-2 py-2 text-red-600 hover:text-red-800"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      onClick={addMilestone}
+                      className="text-sm text-blue-600 hover:text-blue-800"
+                    >
+                      + Add Milestone
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowEditGoalModal(false)}
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateGoal}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+                >
+                  Update Goal
+                </button>
+              </div>
+            </div>
           </div>
-        )}
-      </div>
-    );
-  };
+        </div>
+      )}
+
+      {/* Edit Task Modal */}
+      {showEditTaskModal && editingTask && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-md w-full">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Edit Task</h3>
+                <button 
+                  onClick={() => setShowEditTaskModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Task Title *</label>
+                  <input
+                    type="text"
+                    value={newTask.title}
+                    onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    placeholder="Enter task title"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Description *</label>
+                  <textarea
+                    value={newTask.description}
+                    onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    rows={3}
+                    placeholder="Describe the task"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Priority</label>
+                    <select
+                      value={newTask.priority}
+                      onChange={(e) => setNewTask(prev => ({ ...prev, priority: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    >
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Category</label>
+                    <select
+                      value={newTask.category}
+                      onChange={(e) => setNewTask(prev => ({ ...prev, category: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    >
+                      <option value="Project">Project</option>
+                      <option value="Training">Training</option>
+                      <option value="Appraisal">Appraisal</option>
+                      <option value="Collaboration">Collaboration</option>
+                      <option value="Personal">Personal</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Due Date *</label>
+                    <input
+                      type="date"
+                      value={newTask.dueDate}
+                      onChange={(e) => setNewTask(prev => ({ ...prev, dueDate: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Estimated Hours</label>
+                    <input
+                      type="number"
+                      value={newTask.estimatedHours}
+                      onChange={(e) => setNewTask(prev => ({ ...prev, estimatedHours: parseInt(e.target.value) || 4 }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowEditTaskModal(false)}
+                  className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateTask}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+                >
+                  Update Task
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* View Task Modal */}
+      {showViewTaskModal && viewingTask && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-md w-full">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Task Details</h3>
+                <button 
+                  onClick={() => setShowViewTaskModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Task Title</label>
+                  <p className="text-gray-900 dark:text-gray-100 font-medium">{viewingTask.title}</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Description</label>
+                  <p className="text-gray-600 dark:text-gray-400">{viewingTask.description}</p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Priority</label>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(viewingTask.priority)}`}>
+                      {viewingTask.priority}
+                    </span>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Category</label>
+                    <p className="text-gray-900 dark:text-gray-100">{viewingTask.category}</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Due Date</label>
+                    <p className="text-gray-900 dark:text-gray-100">{viewingTask.dueDate}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Status</label>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(viewingTask.status)}`}>
+                      {viewingTask.status}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Estimated Hours</label>
+                    <p className="text-gray-900 dark:text-gray-100">{viewingTask.estimatedHours}h</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Actual Hours</label>
+                    <input
+                      type="number"
+                      value={viewingTask.actualHours}
+                      onChange={(e) => updateTaskHours(viewingTask.id, parseInt(e.target.value) || 0)}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                      placeholder="Enter actual hours"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Assigned By</label>
+                  <p className="text-gray-900 dark:text-gray-100">{viewingTask.assignedBy}</p>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowViewTaskModal(false)}
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
   const renderOverview = () => (
     <div className="space-y-6">
@@ -1472,8 +1922,19 @@ export default function WorkerDashboard() {
                 >
                   <TrendingUp className="h-4 w-4" />
                 </button>
-                <button className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
+                <button 
+                  onClick={() => handleEditGoal(goal)}
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+                  title="Edit Goal"
+                >
                   <Edit className="h-4 w-4" />
+                </button>
+                <button 
+                  onClick={() => handleDeleteGoal(goal.id)}
+                  className="text-red-600 hover:text-red-800"
+                  title="Delete Goal"
+                >
+                  <X className="h-4 w-4" />
                 </button>
               </div>
             </div>
@@ -1540,11 +2001,26 @@ export default function WorkerDashboard() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
-                      <button className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300">
+                      <button 
+                        onClick={() => handleViewTask(task)}
+                        className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
+                        title="View Task"
+                      >
                         <Eye className="h-4 w-4" />
                       </button>
-                      <button className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
+                      <button 
+                        onClick={() => handleEditTask(task)}
+                        className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+                        title="Edit Task"
+                      >
                         <Edit className="h-4 w-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteTask(task.id)}
+                        className="text-red-600 hover:text-red-800"
+                        title="Delete Task"
+                      >
+                        <X className="h-4 w-4" />
                       </button>
                     </div>
                   </td>
