@@ -932,6 +932,41 @@ export default function WorkerDashboard() {
     );
   };
 
+  const handleNotificationAction = (notification: any) => {
+    // Mark as read first
+    markNotificationAsRead(notification.id);
+    
+    // Handle different notification types
+    switch (notification.type) {
+      case 'goal':
+        // Navigate to goals tab and show add goal modal
+        setSelectedTab('goals');
+        setShowAddGoalModal(true);
+        break;
+      case 'info':
+        // Show notification details
+        alert(`Notification: ${notification.message}`);
+        break;
+      case 'meeting':
+        // Add to calendar (mock functionality)
+        alert('Meeting added to calendar!');
+        break;
+      default:
+        // Default action
+        alert(`Action: ${notification.action}`);
+    }
+  };
+
+  const markAllNotificationsAsRead = () => {
+    setNotifications(prev => 
+      prev.map(notif => ({ ...notif, read: true }))
+    );
+  };
+
+  const getUnreadCount = () => {
+    return notifications.filter(notif => !notif.read).length;
+  };
+
   // Skills management
   const updateSkillLevel = (skillName: string, newLevel: string, newProgress: number) => {
     setSkills(prev => ({
@@ -1148,6 +1183,21 @@ export default function WorkerDashboard() {
   useEffect(() => {
     updateDashboardMetrics();
   }, [goals, tasks, performanceHistory]);
+
+  // Close notification dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showNotifications && !target.closest('.notification-dropdown')) {
+        setShowNotifications(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showNotifications]);
 
   const renderAppraisalSection = (section: typeof appraisalSections[0]) => {
     const sectionData = appraisalData[section.id as keyof typeof appraisalData];
@@ -1679,23 +1729,33 @@ export default function WorkerDashboard() {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 md:p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg md:text-xl font-semibold">Recent Activity</h3>
-          <button 
-            onClick={() => setShowAllNotifications(!showAllNotifications)}
-            className="text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
-          >
-            View All
-          </button>
+          <div className="flex items-center space-x-2">
+            {getUnreadCount() > 0 && (
+              <button 
+                onClick={markAllNotificationsAsRead}
+                className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                Mark all read
+              </button>
+            )}
+            <button 
+              onClick={() => setShowAllNotifications(!showAllNotifications)}
+              className="text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
+            >
+              {showAllNotifications ? 'Show Less' : 'View All'}
+            </button>
+          </div>
         </div>
         <div className="space-y-3">
           {(showAllNotifications ? notifications : notifications.slice(0, 3)).map(notification => (
             <div 
               key={notification.id} 
-              className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
+              className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors hover:bg-gray-100 dark:hover:bg-gray-600 ${
                 notification.read 
                   ? 'bg-gray-50 dark:bg-gray-700' 
                   : 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'
               }`}
-              onClick={() => markNotificationAsRead(notification.id)}
+              onClick={() => handleNotificationAction(notification)}
             >
               <div className={`w-2 h-2 rounded-full ${
                 notification.read 
@@ -1703,16 +1763,24 @@ export default function WorkerDashboard() {
                   : 'bg-blue-500'
               }`}></div>
               <div className="flex-1">
-                <p className="font-medium">{notification.message}</p>
+                <p className="font-medium text-sm md:text-base">{notification.message}</p>
                 <div className="flex justify-between items-center mt-1">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{notification.time}</p>
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">{notification.time}</p>
                   {!notification.read && (
-                    <span className="text-xs text-blue-600 dark:text-blue-400">{notification.action}</span>
+                    <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">{notification.action}</span>
                   )}
                 </div>
               </div>
+              {!notification.read && (
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              )}
             </div>
           ))}
+          {notifications.length === 0 && (
+            <div className="text-center py-6">
+              <p className="text-gray-500 dark:text-gray-400 text-sm">No recent activity</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -1957,8 +2025,8 @@ export default function WorkerDashboard() {
         </button>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden mobile-no-overflow">
+        <div className="overflow-x-auto mobile-no-overflow">
           <table className="min-w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
@@ -2301,7 +2369,7 @@ export default function WorkerDashboard() {
   );
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-4 md:space-y-6 mobile-container">
       <style jsx>{`
         .scrollbar-hide {
           -ms-overflow-style: none;
@@ -2309,6 +2377,17 @@ export default function WorkerDashboard() {
         }
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
+        }
+        @media (max-width: 768px) {
+          .mobile-no-overflow {
+            overflow: hidden;
+            max-width: 100vw;
+          }
+          .mobile-container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            max-width: 100%;
+          }
         }
       `}</style>
       {/* Header */}
@@ -2319,13 +2398,74 @@ export default function WorkerDashboard() {
             <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">Track your performance, goals, and progress</p>
           </div>
           <div className="flex items-center justify-between md:justify-end space-x-2 md:space-x-4">
-            <button 
-              className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-              onClick={() => setShowNotifications(!showNotifications)}
-            >
-              <Bell className="h-5 w-5 md:h-6 md:w-6" />
-              <span className="absolute top-1 right-1 h-3 w-3 bg-black dark:bg-white rounded-full"></span>
-            </button>
+            <div className="relative">
+              <button 
+                className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => setShowNotifications(!showNotifications)}
+              >
+                <Bell className="h-5 w-5 md:h-6 md:w-6" />
+                {getUnreadCount() > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                    {getUnreadCount() > 9 ? '9+' : getUnreadCount()}
+                  </span>
+                )}
+              </button>
+              
+              {/* Notification Dropdown */}
+              {showNotifications && (
+                <div className="notification-dropdown absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-96 overflow-y-auto">
+                  <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-semibold text-sm">Notifications</h3>
+                      {getUnreadCount() > 0 && (
+                        <button 
+                          onClick={markAllNotificationsAsRead}
+                          className="text-xs text-blue-600 hover:text-blue-800"
+                        >
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-2">
+                    {notifications.length > 0 ? (
+                      notifications.map(notification => (
+                        <div 
+                          key={notification.id}
+                          className={`p-3 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 ${
+                            notification.read 
+                              ? 'bg-gray-50 dark:bg-gray-700' 
+                              : 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'
+                          }`}
+                          onClick={() => handleNotificationAction(notification)}
+                        >
+                          <div className="flex items-start space-x-3">
+                            <div className={`w-2 h-2 rounded-full mt-2 ${
+                              notification.read 
+                                ? 'bg-gray-400 dark:bg-gray-500' 
+                                : 'bg-blue-500'
+                            }`}></div>
+                            <div className="flex-1">
+                              <p className="font-medium text-sm">{notification.message}</p>
+                              <div className="flex justify-between items-center mt-1">
+                                <p className="text-xs text-gray-600 dark:text-gray-400">{notification.time}</p>
+                                {!notification.read && (
+                                  <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">{notification.action}</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-4">
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">No notifications</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
             <button 
               onClick={() => setShowContactManagerModal(true)}
               className="bg-black dark:bg-white text-white dark:text-black px-3 md:px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors border border-black dark:border-white text-sm md:text-base"
@@ -2339,9 +2479,9 @@ export default function WorkerDashboard() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow mobile-no-overflow">
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex overflow-x-auto scrollbar-hide px-4 md:px-6">
+          <nav className="flex overflow-x-auto scrollbar-hide px-4 md:px-6 mobile-no-overflow">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'goals', label: 'Goals', icon: Target },
